@@ -15,12 +15,17 @@ public class MainFrame extends JFrame {
     public MainFrame(){
         this.setSize(991,707);// original size from main program
         BorderLayout frameLayout = new BorderLayout();
-        this.getContentPane().setLayout(null);
+
+        this.getContentPane().setLayout(frameLayout);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        //setUndecorated(true); //todo : add ur own close-minimze/maximize icons
-       // this.setLocationRelativeTo(makeCategories());
-        this.getContentPane().add(makeCategories(),BorderLayout.WEST);
-        this.getContentPane().add(makeToolbar(),BorderLayout.NORTH);
+        //setUndecorated(true); //todo : add ur own close-minimize/maximize icons
+        // this.setLocationRelativeTo(makeCategories());
+        JComponent toolBar = makeToolbar();
+        JComponent category = makeCategories();
+        this.getContentPane().add(category, BorderLayout.WEST);
+        this.getContentPane().add(toolBar,BorderLayout.NORTH);
+       // this.getContentPane().setComponentZOrder(category,0);
+        //this.getContentPane().setComponentZOrder(toolBar,1);
 
         addMenuBar();
         this.setVisible(true);
@@ -32,7 +37,7 @@ public class MainFrame extends JFrame {
      * make a panel containing toolbar buttons like start, pause , remove, ...
      * @return JComponent (Here JPanel)
      */
-    private JComponent makeToolbar(){
+    private JComponent makeToolbar(){ //todo : add Accelerator and Mnemonic
         JPanel toolPanel = new JPanel(); // a panel to put buttons on. with flow layout to put buttons in order form left side
         FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
         layout.setHgap(15);
@@ -46,47 +51,58 @@ public class MainFrame extends JFrame {
         ArrayList<JButton> buttonList = new ArrayList<>(); // list of the buttons needed for toolbar. //todo: mabye it must be deleted
         String[] fileAddress = new String[numOfButtons];
         String[] toolTip = new String[numOfButtons];
+        String[] name = new String[numOfButtons];
         for(int i = 0 ; i < numOfButtons ; i++){ // make 2 Collection of Strings for use of opening Icon image and adding tool tip
             switch(i){
                 case 0 :
                     fileAddress[i] = "Files//EagleGetIcons//add.png";
                     toolTip[i] = "Add New Task";
+                    name[i] = "add";
                     break;
                 case 1:
                     fileAddress[i] = "Files//EagleGetIcons//play.png";
                     toolTip[i] = "Start";
+                    name[i] = "play";
                     break;
                 case 2:
                     fileAddress[i] = "Files//EagleGetIcons//pause.png";
                     toolTip[i] = "Pause";
+                    name[i] = "pause";
                     break;
                 case 3:
                     fileAddress[i] = "Files//EagleGetIcons//remove.png";
                     toolTip[i] = "Remove an Existing Download";
+                    name[i] = "remove";
                     break;
                 case 4:
                     fileAddress[i] = "Files//EagleGetIcons//sort.png";
                     toolTip[i] = "Sort";
+                    name[i] = "sort";
                     break;
                 case 5:
                     fileAddress[i] = "Files//EagleGetIcons//taskcleaner.png";
                     toolTip[i] = "Task Cleaner";
+                    name[i] = "TaskCleaner";
                     break;
                 case 6:
                     fileAddress[i] = "Files//EagleGetIcons//vidsniffer.png";
                     toolTip[i] = "Video Sniffer";
+                    name[i] = "VideoSniffer";
                     break;
                 case 7:
                     fileAddress[i] = "Files//EagleGetIcons//grabber.png";
                     toolTip[i] = "Grabber";
+                    name[i] = "grabber";
                     break;
                 case 8:
                     fileAddress[i] = "Files//EagleGetIcons//batchdownload.png";
                     toolTip[i] = "Batch Download";
+                    name[i] = "BatchDownload";
                     break;
                 case 9:
                     fileAddress[i] = "Files//EagleGetIcons//settings.png";
                     toolTip[i] = "Settings";
+                    name[i] = "settings";
                     break;
             }
         }
@@ -96,6 +112,21 @@ public class MainFrame extends JFrame {
             button.setToolTipText(toolTip[i]); // add a tool tip to each button
             button.setBackground(Color.decode("#c8e2ba")); // set button background same as panel color
             button.setBorder(BorderFactory.createEmptyBorder()); // remove the border of the button to make it looks like a flat image on panel
+            if(name[i].equals("add")){
+                button.addActionListener(new UIActionsHandler.AddOpenHandler());
+            }
+            else if(name[i].equals("play")){
+                button.addActionListener(new UIActionsHandler.playHandler());
+            }
+            else if(name[i].equals("pause")){
+                button.addActionListener(new UIActionsHandler.pauseHandler());
+            }
+            else if(name[i].equals("remove")){
+                button.addActionListener(new UIActionsHandler.removeHandler());
+            }
+            else if(name[i].equals("settings")) {
+                button.addActionListener(new UIActionsHandler.SettingOpenHandler());
+            }
             buttonList.add(button);
             toolPanel.add(button);
             if(i == 0 || i == 3 || i == 4 || i == 5 || i == 8){ //todo: if u can add a  better seperator
@@ -115,9 +146,12 @@ public class MainFrame extends JFrame {
 
     private JComponent makeCategories(){
         //setting panel
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-        //JPanel panel = new JPanel(new BorderLayout(2,2));
-        panel.setSize(200,800); //todo : modify or remove
+        //JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        JPanel panel = new JPanel();
+        BoxLayout layout = new BoxLayout(panel,BoxLayout.Y_AXIS);
+        panel.setLayout(layout);
+        //layout.
+        panel.setSize(20,800); //todo : modify or remove
         panel.setLocation(0,0); //todo : modify or remove
         panel.setBorder(BorderFactory.createBevelBorder(1));//todo : modify or remove
         panel.setBackground(Color.decode("#32363f"));
@@ -135,26 +169,27 @@ public class MainFrame extends JFrame {
         for(int i = 0 ; i < numOfButtons ; i++) { // make 2 Collection of Strings for use of opening Icon image and adding tool tip
             switch (i) {
                 case 0:
-                    buttonName[i] = "Processing          "; //todo: find a better way to make button in same size
+                    buttonName[i] = "Processing                      "; //todo: find a better way to make button in same size
                     fileAddress[i] = "Files//EagleGetIcons//processing.png";
                     toolTip[i] = "Downloads in Progress";
                     break;
                 case 1:
-                    buttonName[i] = "Completed           ";
+                    buttonName[i] = "Completed                       ";
                     fileAddress[i] = "Files//EagleGetIcons//completed.png";
                     toolTip[i] = "Completed Downloads";
                     break;
                 case 2:
-                    buttonName[i] = "Queue               ";
+                    buttonName[i] = "Queue                              ";
                     fileAddress[i] = "Files//EagleGetIcons//queue.png";
                     toolTip[i] = "Queue";
                     break;
             }
         }
         //making buttons and set tool tip
-        for(int i = 0 ; i < numOfButtons ; i++){
+        for(int i = 0 ; i < numOfButtons  ; i++){
             JButton button = new JButton(buttonName[i],new ImageIcon(fileAddress[i]));
             button.setHorizontalTextPosition(SwingConstants.RIGHT);
+            panel.add(Box.createRigidArea(new Dimension(0,10)));// add gap in Y Axis
             button.setToolTipText(toolTip[i]); // add a tool tip to each button
             button.setForeground(Color.LIGHT_GRAY);
             button.setBackground(Color.decode("#32363f")); // set button background same as panel color
@@ -189,4 +224,6 @@ public class MainFrame extends JFrame {
         helpMenu.add(userGuide); helpMenu.add(about);
         this.setJMenuBar(menuBar);
     }
+
+
 }
