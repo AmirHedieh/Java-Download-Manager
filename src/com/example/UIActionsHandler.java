@@ -9,10 +9,8 @@ public class UIActionsHandler {
     //Start of tool bar actions
     public static class SettingOpenHandler implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent e) {
-            JFrame settingFrame = new JFrame("Settings");
-            settingFrame.setSize(500,500);
-            settingFrame.setVisible(true);
+        public void actionPerformed(ActionEvent e) { //todo: make program to open only 1 setting
+             new Settings();
         }
     }
 
