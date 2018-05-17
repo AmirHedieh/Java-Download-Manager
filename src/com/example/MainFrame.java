@@ -2,6 +2,10 @@ package com.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -11,10 +15,24 @@ import java.util.ArrayList;
  */
 public class MainFrame extends JFrame {
 
+    public String look;
+
     //constructor
     public MainFrame(){
         this.setSize(991,707);// original size from main program
         BorderLayout frameLayout = new BorderLayout();
+
+        try {
+            setLook(); // set look and feel
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            System.out.println("Wrong look and feel");
+        } catch (InstantiationException e) {
+            System.out.println("Instantiation Exception");
+        } catch (IllegalAccessException e) {
+            System.out.println("Illegal Access Exception");
+        }
 
         this.getContentPane().setLayout(frameLayout);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -225,5 +243,48 @@ public class MainFrame extends JFrame {
         this.setJMenuBar(menuBar);
     }
 
+    public void setLook() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException { //read Setting file and update settings
+        File settingFile = new File("Files//Settings.txt");
+        if (settingFile.exists()){
+            System.out.println("File found");
+        }
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(settingFile));
+        } catch (IOException e1) {
+            System.out.println("Can't Write setting File");
+        }
+        String input = null;
+        try {
+            input = bufferedReader.readLine();
+        } catch (IOException e) {
+            System.out.println("Couldn't mak String");
+        }
+        System.out.println(input);
+        String[] splitString = input.split(" ");
+        switch (splitString[0]){
+            case "Metal":{
+                UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+                break;
+            }
+            case "Nimbus":{
+                UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                break;
+            }
+            case "Windows":{
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+                break;
+            }
+            case "WindowsClassic":{
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");
+                break;
+            }
+            case "CDE/Motif":{
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+                break;
+            }
+        }
+
+    }
 
 }
