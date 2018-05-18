@@ -21,6 +21,7 @@ public class Settings { //todo: place components in right locations
 
     //constructor
     public Settings(){
+        frame.setLocation(670,300);
         frame.setTitle("Settings");
         frame.setModal(true);
         frame.setSize(500,500);

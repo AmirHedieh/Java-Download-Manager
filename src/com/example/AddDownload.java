@@ -9,8 +9,8 @@ public class AddDownload {
 
     //fields
     JDialog frame = new JDialog();
-    JTextField link = new JTextField("LINK");
-    JTextField fileName = new JTextField("Name");
+    JTextField link = new JTextField(" Give a link");
+    JTextField fileName = new JTextField(" Name");
     JTextField saveDirecotyr = new JTextField(SettingFileInfo.getItems().saveDir);
     //String fileName = new String();
     JButton ok = new JButton("Ok");
@@ -20,11 +20,15 @@ public class AddDownload {
 
     //constructor
     public AddDownload(){
+        link.setForeground(Color.GRAY);
+        fileName.setForeground(Color.GRAY);
+        saveDirecotyr.setForeground(Color.GRAY);
         frame.setTitle("Add New Download");
         frame.setModal(true);
         frame.setSize(650,350);
         frame.getContentPane().setBackground(Color.WHITE);
         frame.setLayout(null);
+        frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         //fileName.setText(SettingFileInfo.getItems().saveDir);
         putComponents();
@@ -65,7 +69,7 @@ public class AddDownload {
         label3.setLocation(20,150);
         saveDirecotyr.setSize(470,30);
         saveDirecotyr.setLocation(120,145);
-        saveDirecotyr.setText(SettingFileInfo.getItems().saveDir);
+        saveDirecotyr.setText(" " + SettingFileInfo.getItems().saveDir);
         frame.getContentPane().add(saveDirecotyr);
         frame.getContentPane().add(label3);
     }

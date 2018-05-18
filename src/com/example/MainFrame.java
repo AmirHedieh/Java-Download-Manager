@@ -20,6 +20,7 @@ public class MainFrame extends JFrame {
 
     //constructor
     public MainFrame(){
+        this.setLocation(450,170); //location frame opens
         this.setSize(991,707);// original size from main program
         addSystemTray();
         //BorderLayout frameLayout = new BorderLayout();
@@ -65,7 +66,7 @@ public class MainFrame extends JFrame {
         FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
         layout.setHgap(15);
         toolPanel.setLayout(layout);
-        toolPanel.setSize(799,64); //todo : modify or remove
+        toolPanel.setSize(785,50); //todo : modify or remove
         toolPanel.setLocation(200,0); //todo : modify or remove
         //toolPanel.setBorder(BorderFactory.createBevelBorder(1));//todo : modify or remove
         toolPanel.setBackground(Color.decode("#c8e2ba"));
@@ -187,6 +188,7 @@ public class MainFrame extends JFrame {
                     }
                 });
             }
+
             buttonList.add(button);
             toolPanel.add(button);
             if(i == 0 || i == 3 || i == 4 || i == 5 || i == 8){ //todo: if u can add a  better seperator
@@ -197,6 +199,7 @@ public class MainFrame extends JFrame {
         JTextField searchBar = new JTextField();
         searchBar.setPreferredSize(new Dimension(170,30));
         searchBar.setText(" Enter File Name");
+        searchBar.setForeground(Color.GRAY);
         searchBar.setBackground(Color.decode("#c8e2ba"));
         searchBar.setBorder(BorderFactory.createLineBorder(Color.gray));
         toolPanel.add(searchBar);
@@ -354,14 +357,14 @@ public class MainFrame extends JFrame {
 
         JLabel fileName = new JLabel(fileInfo[1]);
         JLabel fileLink = new JLabel(fileInfo[0]);
-        fileName.setLocation(70,10);
-        fileName.setSize(100,15);
+        fileName.setLocation(70,14);
+        fileName.setSize(300,15);
         fileName.setForeground(Color.GRAY);
         newDlPanel.add(fileName);
 
         JProgressBar progressBar = new JProgressBar(0,100);
         progressBar.setSize(500,20);
-        progressBar.setLocation(70,15);
+        progressBar.setLocation(70,34);
         progressBar.setValue(0);
         progressBar.setStringPainted(true);
         newDlPanel.add(progressBar);
@@ -369,20 +372,13 @@ public class MainFrame extends JFrame {
         height += 81; //cause next download file location come to the before one
         newDlPanel.setBackground(Color.decode("#ffe1ad"));
         downloadMainPanel.add(newDlPanel);
-        //revalidate();
-        //setVisible(false);
-        //setVisible(true);
-        //System.out.println("Repainted");
-         downloadFile(progressBar,fileInfo[0],SettingFileInfo.getItems().saveDir + fileInfo[1]);
-        while (true){
-            System.out.println("h");
-            break;
-        }
+        repaint();
+        new Thread(() -> {
+                downloadFile(progressBar,fileInfo[0],SettingFileInfo.getItems().saveDir + fileInfo[1]);
+        }).start();
+
         SettingFileInfo.getItems().setAddState(0); // change the add state to primal state
         SettingFileInfo.getItems().checkContinue = 0;
-        while (true){
-            break;
-        }
     }
 
     public void downloadFile(JProgressBar jb, String srcPath , String dstPath){ //copy a file from src to dst path
@@ -391,11 +387,13 @@ public class MainFrame extends JFrame {
         revalidate();
         repaint();
         int SI = (int)src.length() / 100;
+        //System.out.println(src.length());
+        //System.out.println(SI);
         if (!src.exists()) {
             System.out.println("Source file does not exist.");
             return;
         }
-        System.out.println("Copying \'" + src.getName() + "\' to \'" + dst.getName() + "\' ...");
+        //System.out.println("Copying \'" + src.getName() + "\' to \'" + dst.getName() + "\' ...");
         try (InputStream in = new FileInputStream(src);
              OutputStream out = new FileOutputStream(dst)) {
             byte[] buffer = new byte[SI];
@@ -409,7 +407,7 @@ public class MainFrame extends JFrame {
                 repaint();
                 revalidate();
             }
-            System.out.println("Copy finished.\n");
+            //System.out.println("Copy finished.\n");
         } catch (IOException ex) {
             System.err.println(ex);
         }
@@ -421,8 +419,8 @@ public class MainFrame extends JFrame {
         //scrollPane.setLocation(740,0);
         //scrollPane.setSize(20,550);
         //downloadMainPanel.add(scrollPane); //todo:add scroll
-        downloadMainPanel.setLocation(200,64);
-        downloadMainPanel.setSize(790,585);
+        downloadMainPanel.setLocation(200,50);
+        downloadMainPanel.setSize(785,590);
         //downloadMainPanel.setPreferredSize(new Dimension(500,500));
         //BoxLayout layout = new BoxLayout(downloadMainPanel,BoxLayout.Y_AXIS);
         GridLayout layout = new GridLayout(0,1);
