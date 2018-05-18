@@ -8,9 +8,9 @@ import java.awt.event.ActionListener;
 import java.io.*;
 
 public class Settings { //todo: place components in right locations
-
+ //todo:when user change L&F a pop up panel says "PLZ Rerun program to change L&F"
     //fields
-    private JFrame frame = new JFrame("Settings");
+    private JDialog frame = new JDialog();
     private JComboBox lookAndFeelChooser;
     private JComboBox downloadLimit;
     private JButton openFile;
@@ -21,6 +21,8 @@ public class Settings { //todo: place components in right locations
 
     //constructor
     public Settings(){
+        frame.setTitle("Settings");
+        frame.setModal(true);
         frame.setSize(500,500);
         //BoxLayout layout = new BoxLayout(frame.getContentPane(),BoxLayout.Y_AXIS);
         frame.getContentPane().setBackground(Color.decode("#c8e2ba")); // green color
@@ -31,7 +33,7 @@ public class Settings { //todo: place components in right locations
         String[] possibleNumbers = new String[4];
         possibleNumbers[0] = "Unlimited"; possibleNumbers[1] = "1"; possibleNumbers[2] = "4"; possibleNumbers[3] = "8";
         downloadLimit = new JComboBox(possibleNumbers);
-        readSettingFile();
+        updateSettings();
         makeLookComboBox();
         makeDownloadLimitComboBox();
         makeFileChooser();
@@ -100,7 +102,7 @@ public class Settings { //todo: place components in right locations
             public void actionPerformed(ActionEvent e) {
                 File settingFile = new File("Files//Settings.txt");
                 if (settingFile.exists()){
-                    System.out.println("File found");
+                    //System.out.println("File found");
                 }
                 BufferedWriter bufferedWriter = null;
                 try {
@@ -112,10 +114,10 @@ public class Settings { //todo: place components in right locations
                 newState += lookAndFeelChooser.getSelectedItem() + " ";
                 newState += downloadLimit.getSelectedItem() + " ";
                 newState += dir;
-                System.out.println(newState);
+                //System.out.println(newState);
                 try {
                     bufferedWriter.write(newState);
-                    System.out.println("File wrote");
+                    //System.out.println("File wrote");
                 } catch (IOException e1) {
                     System.out.println("Can't Write setting File");
                 }
@@ -145,26 +147,8 @@ public class Settings { //todo: place components in right locations
 
 
 
-    public void readSettingFile(){ //read Setting file and update settings
-        File settingFile = new File("Files//Settings.txt");
-        if (settingFile.exists()){
-            System.out.println("File found");
-        }
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(settingFile));
-        } catch (IOException e1) {
-            System.out.println("Can't Write setting File");
-        }
-        String input = null;
-        try {
-            input = bufferedReader.readLine();
-        } catch (IOException e) {
-            System.out.println("Couldn't mak String");
-        }
-        System.out.println(input);
-        String[] splitString = input.split(" ");
-        switch (splitString[0]){
+    public void updateSettings(){ // update settings
+        switch (SettingFileInfo.getItems().lookAndFeel){
             case "Metal":{
                 lookAndFeelChooser.setSelectedItem("Metal");
                 break;
@@ -187,7 +171,7 @@ public class Settings { //todo: place components in right locations
             }
         }
 
-        switch (splitString[1]){
+        switch (SettingFileInfo.getItems().downloadLimit){
             case "Unlimited":{
                 downloadLimit.setSelectedItem("Unlimited");
                 break;
