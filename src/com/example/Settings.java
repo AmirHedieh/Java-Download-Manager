@@ -8,15 +8,15 @@ import java.awt.event.ActionListener;
 import java.io.*;
 
 public class Settings { //todo: place components in right locations
- //todo:when user change L&F a pop up panel says "PLZ Rerun program to change L&F"
+ //todo:when user change L&F a pop up panel says "PLZ Re run program to change L&F"
     //fields
     private JDialog frame = new JDialog();
     private JComboBox lookAndFeelChooser;
     private JComboBox downloadLimit;
     private JButton openFile;
     private JFileChooser address;
-    private JButton ok = new JButton("Ok");
-    private JButton cancel = new JButton("Cancel");
+    private JButton ok = new JButton(new ImageIcon("Files//ok.png"));
+    private JButton cancel = new JButton(new ImageIcon("Files//cancel.png"));
     private String dir = new String("F://Projects//term2//JDM//Files");
 
     //constructor
@@ -24,7 +24,7 @@ public class Settings { //todo: place components in right locations
         frame.setLocation(670,300);
         frame.setTitle("Settings");
         frame.setModal(true);
-        frame.setSize(500,500);
+        frame.setSize(500,300);
         //BoxLayout layout = new BoxLayout(frame.getContentPane(),BoxLayout.Y_AXIS);
         frame.getContentPane().setBackground(Color.decode("#c8e2ba")); // green color
         //frame.getContentPane().setBackground(Color.decode("#32363f")); //gray color
@@ -50,30 +50,32 @@ public class Settings { //todo: place components in right locations
         openFile = new JButton("Set Path");
         openFile.setSize(140,30);
         openFile.setLocation(180,120);
-        openFile.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int i = address.showOpenDialog(frame);
-                if( i == JFileChooser.APPROVE_OPTION){
-                    java.io.File file = address.getCurrentDirectory();
-                    dir = file.getAbsolutePath();
-                }
+        openFile.addActionListener(e -> {
+            int i = address.showOpenDialog(frame);
+            if( i == JFileChooser.APPROVE_OPTION){
+                File file = address.getCurrentDirectory();
+                dir = file.getAbsolutePath();
             }
         });
         frame.getContentPane().add(openFile);
     }
 
     private void makeDownloadLimitComboBox(){ //add a combo box which contains some numbers for setting maximum number of download files
-        //String[] possibleNumbers = new String[4];
-        //possibleNumbers[0] = "Unlimited"; possibleNumbers[1] = "1"; possibleNumbers[2] = "4"; possibleNumbers[3] = "8";
-        //downloadLimit = new JComboBox(possibleNumbers);
+        JLabel label = new JLabel("Files at same time :");
+        label.setSize(120,20);
+        label.setLocation(60,80);
+        frame.getContentPane().add(label);
+
         downloadLimit.setSize(140,27);
         downloadLimit.setLocation(180,75);
         frame.getContentPane().add(downloadLimit);
     }
 
     private void makeLookComboBox(){ //add a combo box including system look and feels to frame
-        //lookAndFeelChooser = new JComboBox(sysLookAndFeels());
+        JLabel label = new JLabel("Look And Feel :");
+        label.setSize(120,20);
+        label.setLocation(60,35);
+        frame.getContentPane().add(label);
         lookAndFeelChooser.setSize(140,27);
         lookAndFeelChooser.setLocation(180,30);
         frame.getContentPane().add(lookAndFeelChooser);
@@ -95,8 +97,9 @@ public class Settings { //todo: place components in right locations
     }
 
     private void addOkAction(){ //add action to OK button, it saves the setting in file directory in a text file
-        ok.setSize(80,30);
-        ok.setLocation(280,425);
+        ok.setSize(80,60);
+        ok.setBackground(Color.decode("#c8e2ba"));
+        ok.setLocation(280,195);
         frame.getContentPane().add(ok);
         ok.addActionListener( new ActionListener() {
             @Override
@@ -115,10 +118,8 @@ public class Settings { //todo: place components in right locations
                 newState += lookAndFeelChooser.getSelectedItem() + " ";
                 newState += downloadLimit.getSelectedItem() + " ";
                 newState += dir;
-                //System.out.println(newState);
                 try {
                     bufferedWriter.write(newState);
-                    //System.out.println("File wrote");
                 } catch (IOException e1) {
                     System.out.println("Can't Write setting File");
                 }
@@ -135,8 +136,9 @@ public class Settings { //todo: place components in right locations
     }
 
     private void addCancelAction(){
-        cancel.setSize(80,30);
-        cancel.setLocation(380,425);
+        cancel.setSize(80,60);
+        cancel.setLocation(380,195);
+        cancel.setBackground(Color.decode("#c8e2ba"));
         frame.getContentPane().add(cancel);
         cancel.addActionListener(new ActionListener() {
             @Override

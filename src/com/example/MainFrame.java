@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 import static java.lang.System.exit;
+import static java.lang.System.setOut;
 
 /**
  * Main frame of the download manager
@@ -17,6 +18,7 @@ public class MainFrame extends JFrame {
 
     private JPanel downloadMainPanel;
     private static int height = 0;
+    private static int numOfDownloadItems = 0; //used to change downloadMainPanel layout when reaching max space
     private TrayIcon trayIcon;
     private SystemTray tray;
 
@@ -25,8 +27,9 @@ public class MainFrame extends JFrame {
         this.setLocation(450,170); //location frame opens
         this.setSize(991,707);// original size from main program
         addSystemTray();
-        //BorderLayout frameLayout = new BorderLayout();
-        //this.setResizable(false); //todo turn it on
+        Image image = Toolkit.getDefaultToolkit().getImage("Files//EagleGetIcons//icon.png");
+        this.setIconImage(image);
+        this.setResizable(false);
         readSettingFile();
         try {
             setLook(); // set look and feel
@@ -63,18 +66,17 @@ public class MainFrame extends JFrame {
      * make a panel containing toolbar buttons like start, pause , remove, ...
      * @return JComponent (Here JPanel)
      */
-    private JComponent makeToolbar(){ //todo : add Accelerator and Mnemonic
+    private JComponent makeToolbar(){
         JPanel toolPanel = new JPanel(); // a panel to put buttons on. with flow layout to put buttons in order form left side
         FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
         layout.setHgap(15);
         toolPanel.setLayout(layout);
-        toolPanel.setSize(785,50); //todo : modify or remove
-        toolPanel.setLocation(200,0); //todo : modify or remove
-        //toolPanel.setBorder(BorderFactory.createBevelBorder(1));//todo : modify or remove
+        toolPanel.setSize(785,50);
+        toolPanel.setLocation(200,0);
         toolPanel.setBackground(Color.decode("#c8e2ba"));
 
         int numOfButtons = 10 ; // to change the num of buttons change thi value
-        ArrayList<JButton> buttonList = new ArrayList<>(); // list of the buttons needed for toolbar. //todo: mabye it must be deleted
+        ArrayList<JButton> buttonList = new ArrayList<>(); // list of the buttons needed for toolbar.
         String[] fileAddress = new String[numOfButtons];
         String[] toolTip = new String[numOfButtons];
         String[] name = new String[numOfButtons];
@@ -138,55 +140,30 @@ public class MainFrame extends JFrame {
             button.setToolTipText(toolTip[i]); // add a tool tip to each button
             button.setBackground(Color.decode("#c8e2ba")); // set button background same as panel color
             button.setBorder(BorderFactory.createEmptyBorder()); // remove the border of the button to make it looks like a flat image on panel
+            //button.setIconTextGap(5);
             if(name[i].equals("add")){
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        addDownload();
-                    }
-
-                });
+                button.addActionListener(e -> addDownload());
             }
 
             else if(name[i].equals("play")){
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println("Play Pressed");
-                    }
-                });
+                button.addActionListener(e -> System.out.println("Play Pressed"));
             }
 
             else if(name[i].equals("pause")){
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println("Pause Pressed");
-                    }
-                });
+                button.addActionListener(e -> System.out.println("Pause Pressed"));
             }
 
             else if(name[i].equals("remove")){
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println("remove Pressed");
-                    }
-                });
+                button.addActionListener(e -> System.out.println("remove Pressed"));
             }
 
             else if(name[i].equals("settings")) {
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        new Settings();
-                    }
-                });
+                button.addActionListener(e -> new Settings());
             }
 
             buttonList.add(button);
             toolPanel.add(button);
-            if(i == 0 || i == 3 || i == 4 || i == 5 || i == 8){ //todo: if u can add a  better seperator
+            if(i == 0 || i == 3 || i == 4 || i == 5 || i == 8){
                 toolPanel.add(new JLabel("|"));
             }
         }
@@ -203,19 +180,13 @@ public class MainFrame extends JFrame {
     }
 
     private JComponent makeCategories(){
-        //setting panel
-        //JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel,BoxLayout.Y_AXIS);
         panel.setLayout(layout);
-        //layout.
-        panel.setSize(200,800); //todo : modify or remove
-        panel.setLocation(0,0); //todo : modify or remove
-        panel.setBorder(BorderFactory.createBevelBorder(1));//todo : modify or remove
+        panel.setSize(200,800);
+        panel.setLocation(0,0);
+        panel.setBorder(BorderFactory.createBevelBorder(1));
         panel.setBackground(Color.decode("#32363f"));
-        //gbc.gridheight = 1;
-        //gbc.gridheight = 1;
-        //gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(new JLabel(new ImageIcon("Files//EagleGetIcons//logo.png")));
 
         int numOfButtons = 3; // to change number of buttons, change this value
@@ -390,7 +361,10 @@ public class MainFrame extends JFrame {
 
     private void AddNewItemDownloadToFrame(){
         String[] fileInfo = SettingFileInfo.getItems().fileInfo.split("<>"); //[0]-fileLink [1]-fileName
-
+        numOfDownloadItems++;
+        if(numOfDownloadItems > 7){
+            downloadMainPanel.setLayout(new BoxLayout(downloadMainPanel,BoxLayout.Y_AXIS));
+        }
         JPanel newDlPanel = new JPanel();
         newDlPanel.setLayout(null);
         newDlPanel.setSize(new Dimension(785,80));
@@ -401,7 +375,8 @@ public class MainFrame extends JFrame {
         icon.setLocation(10,20);
         newDlPanel.add(icon);
 
-        JLabel fileName = new JLabel(fileInfo[1]);
+        File getSizeFile = new File(fileInfo[0]);
+        JLabel fileName = new JLabel( fileInfo[1] + "     " + getSizeFile.length() / 1000 + " KB" );
         JLabel fileLink = new JLabel(fileInfo[0]);
         fileName.setLocation(70,14);
         fileName.setSize(300,15);
@@ -415,9 +390,30 @@ public class MainFrame extends JFrame {
         progressBar.setStringPainted(true);
         newDlPanel.add(progressBar);
 
+        JButton open = new JButton(new ImageIcon("Files//open.png"));
+        open.setSize(15,15);
+        open.setBorder(BorderFactory.createEmptyBorder()); // remove the border of the button to make it looks like a flat image on panel
+        open.setBackground(Color.decode("#ffe1ad"));
+        open.setLocation(progressBar.getLocation().x + progressBar.getSize().width + 5,progressBar.getLocation().y);
+        open.addActionListener(e -> {
+            File file = new File(SettingFileInfo.getItems().saveDir + fileInfo[1]);
+            Desktop desktop = Desktop.getDesktop();
+            if(file.exists()) {
+                try {
+                    desktop.open(file);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        newDlPanel.add(open);
+
         height += 81; //cause next download file location come to the before one
         newDlPanel.setBackground(Color.decode("#ffe1ad"));
+
         downloadMainPanel.add(newDlPanel);
+
+
         repaint();
         new Thread(() -> {
                 downloadFile(progressBar,fileInfo[0],SettingFileInfo.getItems().saveDir + fileInfo[1]);
@@ -433,13 +429,10 @@ public class MainFrame extends JFrame {
         revalidate();
         repaint();
         int SI = (int)src.length() / 100;
-        //System.out.println(src.length());
-        //System.out.println(SI);
         if (!src.exists()) {
             System.out.println("Source file does not exist.");
             return;
         }
-        //System.out.println("Copying \'" + src.getName() + "\' to \'" + dst.getName() + "\' ...");
         try (InputStream in = new FileInputStream(src);
              OutputStream out = new FileOutputStream(dst)) {
             byte[] buffer = new byte[SI];
@@ -448,12 +441,11 @@ public class MainFrame extends JFrame {
                 jb.setValue(process);
                 int count = in.read(buffer);
                 out.write(buffer, 0, count);
-                //System.out.println(count + " bytes copied.");
                 process++;
                 repaint();
                 revalidate();
             }
-            //System.out.println("Copy finished.\n");
+            dst.renameTo(src);
         } catch (IOException ex) {
             System.err.println(ex);
         }
@@ -461,17 +453,12 @@ public class MainFrame extends JFrame {
 
     private JComponent makeDownloadPanel(){
         downloadMainPanel = new JPanel();
-
-        //downloadMainPanel.add(scrollPane); //todo:add scroll
+        //todo:add scroll
         downloadMainPanel.setLocation(200,50);
         downloadMainPanel.setSize(785,590);
-        //downloadMainPanel.setPreferredSize(new Dimension(500,500));
-        //BoxLayout layout = new BoxLayout(downloadMainPanel,BoxLayout.Y_AXIS);
         GridLayout layout = new GridLayout(0,1);
         downloadMainPanel.setLayout(null);
-        //downloadMainPanel.setLayout(new BoxLayout(downloadMainPanel,BoxLayout.Y_AXIS));
         downloadMainPanel.setBackground(Color.decode("#d8e8d7"));
-        //downloadMainPanel.setBorder(BorderFactory.createBevelBorder(1));// todo: mabye must be removed
         return downloadMainPanel;
     }
 
@@ -499,32 +486,30 @@ public class MainFrame extends JFrame {
 
 
     private WindowStateListener getWindowStateListener() {
-        WindowStateListener windowStateListener = new WindowStateListener() {
-            public void windowStateChanged(WindowEvent windowEvent) {
-                if (windowEvent.getNewState() == Frame.ICONIFIED) {
-                    try {
-                        tray.add(trayIcon);
-                        setVisible(false);
-                    } catch (AWTException ex) {
-                        // System.out.println("unable to add to tray");
-                    }
+        WindowStateListener windowStateListener = windowEvent -> {
+            if (windowEvent.getNewState() == Frame.ICONIFIED) {
+                try {
+                    tray.add(trayIcon);
+                    setVisible(false);
+                } catch (AWTException ex) {
+                    // System.out.println("unable to add to tray");
                 }
-                if (windowEvent.getNewState() == Cursor.NE_RESIZE_CURSOR) {
-                    try {
-                        tray.add(trayIcon);
-                        setVisible(false);
-                    } catch (AWTException ex) {
-                        // System.out.println("unable to add to system tray");
-                    }
+            }
+            if (windowEvent.getNewState() == Cursor.NE_RESIZE_CURSOR) {
+                try {
+                    tray.add(trayIcon);
+                    setVisible(false);
+                } catch (AWTException ex) {
+                    // System.out.println("unable to add to system tray");
                 }
-                if (windowEvent.getNewState() == Frame.MAXIMIZED_BOTH) {
-                    tray.remove(trayIcon);
-                    setVisible(true);
-                }
-                if (windowEvent.getNewState() == Frame.NORMAL) {
-                    tray.remove(trayIcon);
-                    setVisible(true);
-                }
+            }
+            if (windowEvent.getNewState() == Frame.MAXIMIZED_BOTH) {
+                tray.remove(trayIcon);
+                setVisible(true);
+            }
+            if (windowEvent.getNewState() == Frame.NORMAL) {
+                tray.remove(trayIcon);
+                setVisible(true);
             }
         };
         return windowStateListener;
@@ -535,8 +520,6 @@ public class MainFrame extends JFrame {
         new AddDownload();
         if(SettingFileInfo.getItems().addState == 1){
             AddNewItemDownloadToFrame();
-            //String[] fileInfo = SettingFileInfo.getItems().fileInfo.split("<>"); //[0]-fileLink [1]-fileName
-            //downloadFile(downloadMainPanel,fileInfo[0],SettingFileInfo.getItems().saveDir + fileInfo[1]);
 
         }
     }
@@ -562,5 +545,6 @@ public class MainFrame extends JFrame {
         frame.add(label);
         frame.setVisible(true);
     }
+
 
 }

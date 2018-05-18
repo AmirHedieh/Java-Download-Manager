@@ -2,8 +2,7 @@ package com.example;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 
 public class AddDownload {
 
@@ -20,6 +19,7 @@ public class AddDownload {
 
     //constructor
     public AddDownload(){
+
         link.setForeground(Color.GRAY);
         fileName.setForeground(Color.GRAY);
         saveDirecotyr.setForeground(Color.GRAY);
@@ -27,6 +27,7 @@ public class AddDownload {
         frame.setModal(true);
         frame.setSize(650,350);
         frame.getContentPane().setBackground(Color.WHITE);
+        frame.getContentPane().setBackground(Color.decode("#1f96c4")); // green color
         frame.setLayout(null);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
@@ -75,15 +76,12 @@ public class AddDownload {
     }
 
     private void addCancelAction(){
-        cancel.setBackground(Color.green);
+        //cancel.setBackground(Color.green);
         cancel.setSize(100,40);
         cancel.setLocation(540,270);
-        cancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SettingFileInfo.getItems().setCheckContinue(1);
-                frame.setVisible(false);
-            }
+        cancel.addActionListener(e -> {
+            SettingFileInfo.getItems().setCheckContinue(1);
+            frame.setVisible(false);
         });
         frame.getContentPane().add(cancel);
     }
@@ -95,37 +93,31 @@ public class AddDownload {
      * set fileInfo field in SettingFileInfo Class to String s which include file info like name- directory-...
      */
     private void addOkAction(){
-        ok.setBackground(Color.green);
+       // ok.setBackground(Color.green);
         ok.setSize(100,40);
         ok.setLocation(430,270);
-        ok.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                    SettingFileInfo.getItems().setAddState(1);
-                    String s = link.getText() + "<>" + fileName.getText() + "<>";
-                    SettingFileInfo.getItems().setFileInfo(s);
-                    SettingFileInfo.getItems().setCheckContinue(1);
-                    frame.setVisible(false);
-            }
+        ok.addActionListener(e -> {
+                SettingFileInfo.getItems().setAddState(1);
+                String s = link.getText() + "<>" + fileName.getText() + "<>";
+                SettingFileInfo.getItems().setFileInfo(s);
+                SettingFileInfo.getItems().setCheckContinue(1);
+                frame.setVisible(false);
         });
         frame.getContentPane().add(ok);
     }
 
     private void addActionToaddFile(){
         JFileChooser address = new JFileChooser();
-        addFile.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int j = address.showOpenDialog(frame);
-                if( j == JFileChooser.APPROVE_OPTION){
-                    java.io.File file = address.getSelectedFile();
-                    dir = file.getAbsolutePath();
-                    file = address.getCurrentDirectory();
-                    dir2 = file.getAbsolutePath();
-                    String s = dir.substring(dir2.length() + 1);
-                    fileName.setText(s);
-                    link.setText(dir);
-                }
+        addFile.addActionListener(e -> {
+            int j = address.showOpenDialog(frame);
+            if( j == JFileChooser.APPROVE_OPTION){
+                java.io.File file = address.getSelectedFile();
+                dir = file.getAbsolutePath();
+                file = address.getCurrentDirectory();
+                dir2 = file.getAbsolutePath();
+                String s = dir.substring(dir2.length() + 1);
+                fileName.setText(s);
+                link.setText(dir);
             }
         });
     }
