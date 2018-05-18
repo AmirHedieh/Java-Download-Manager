@@ -6,6 +6,8 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 
+import static java.lang.System.exit;
+
 /**
  * Main frame of the download manager
  * which contains several part such as toolbar and menu bar ...
@@ -140,14 +142,7 @@ public class MainFrame extends JFrame {
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        readSettingFile();
-                        new AddDownload();
-                        if(SettingFileInfo.getItems().addState == 1){
-                             AddNewItemDownloadToFrame();
-                            //String[] fileInfo = SettingFileInfo.getItems().fileInfo.split("<>"); //[0]-fileLink [1]-fileName
-                            //downloadFile(downloadMainPanel,fileInfo[0],SettingFileInfo.getItems().saveDir + fileInfo[1]);
-
-                        }
+                        addDownload();
                     }
 
                 });
@@ -265,23 +260,74 @@ public class MainFrame extends JFrame {
     private void addMenuBar(){ //adding Download and Help Menu Bar
         JMenuBar menuBar = new JMenuBar();
         JMenu downloadMenu = new JMenu("Download");
+        downloadMenu.setMnemonic(KeyEvent.VK_D);
+
         JMenu helpMenu = new JMenu("Help");
+        helpMenu.setMnemonic(KeyEvent.VK_H);
         menuBar.add(downloadMenu);
         menuBar.add(helpMenu);
         JMenuItem add,play,pause,remove,sort,taskcleaner,vidsniffer,grabber,settings,exit;
         JMenuItem about,userGuide;
         add = new JMenuItem("Add New Download");
+        KeyStroke ctrlAKeyStroke = KeyStroke.getKeyStroke("control A");
+        add.setAccelerator(ctrlAKeyStroke);
+        add.addActionListener(e -> addDownload());
+
         play = new JMenuItem("Resume");
+        KeyStroke ctrlXKeyStroke = KeyStroke.getKeyStroke("shift P");
+        play.setAccelerator(ctrlXKeyStroke);
+        play.addActionListener(e -> System.out.println("Resume"));
+
         pause = new JMenuItem("Pause");
+        KeyStroke ctrlPKeyStroke = KeyStroke.getKeyStroke("control P");
+        pause.setAccelerator(ctrlPKeyStroke);
+        pause.addActionListener(e -> System.out.println("Pause"));
+
         remove= new JMenuItem("Remove");
+        KeyStroke ctrlRKeyStroke = KeyStroke.getKeyStroke("control R");
+        remove.setAccelerator(ctrlRKeyStroke);
+        remove.addActionListener(e -> System.out.println("Remove"));
+
         sort = new JMenuItem("Sort");
+        KeyStroke ctrlOKeyStroke = KeyStroke.getKeyStroke("control O");
+        sort.setAccelerator(ctrlOKeyStroke);
+        sort.addActionListener(e -> System.out.println("Sort"));
+
         taskcleaner = new JMenuItem("Task Cleaner");
+        KeyStroke ctrlTKeyStroke = KeyStroke.getKeyStroke("control T");
+        taskcleaner.setAccelerator(ctrlTKeyStroke);
+        taskcleaner.addActionListener(e -> System.out.println("Task Cleaner"));
+
         vidsniffer = new JMenuItem("Video Sniffer");
+        KeyStroke ctrlVKeyStroke = KeyStroke.getKeyStroke("control V");
+        vidsniffer.setAccelerator(ctrlVKeyStroke);
+        vidsniffer.addActionListener(e -> System.out.println("Video Sniffer"));
+
         grabber = new JMenuItem("Media Grabber");
+        KeyStroke ctrlMKeyStroke = KeyStroke.getKeyStroke("control M");
+        grabber.setAccelerator(ctrlMKeyStroke);
+        grabber.addActionListener(e -> System.out.println("Media Grabber"));
+
         settings = new JMenuItem("Settings");
+        KeyStroke ctrlSKeyStroke = KeyStroke.getKeyStroke("control S");
+        settings.setAccelerator(ctrlSKeyStroke);
+        settings.addActionListener(e -> new Settings());
+
         exit = new JMenuItem("Exit");
+        KeyStroke ctrlEKeyStroke = KeyStroke.getKeyStroke("control E");
+        exit.setAccelerator(ctrlEKeyStroke);
+        exit.addActionListener(e -> exit(0));
+
         about = new JMenuItem("About");
+        KeyStroke shiftAKeyStroke = KeyStroke.getKeyStroke("shift E");
+        about.setAccelerator(shiftAKeyStroke);
+        about.addActionListener(e -> showAbout());
+
         userGuide = new JMenuItem("User Guide");
+        KeyStroke shiftHKeyStroke = KeyStroke.getKeyStroke("shift H");
+        userGuide.setAccelerator(shiftHKeyStroke);
+        userGuide.addActionListener(e -> showguide());
+
         downloadMenu.add(add); downloadMenu.add(play); downloadMenu.add(pause); downloadMenu.add(remove); downloadMenu.add(sort); downloadMenu.add(taskcleaner); downloadMenu.add(vidsniffer); downloadMenu.add(grabber);
         downloadMenu.add(settings); downloadMenu.add(exit);
         helpMenu.add(userGuide); helpMenu.add(about);
@@ -415,9 +461,7 @@ public class MainFrame extends JFrame {
 
     private JComponent makeDownloadPanel(){
         downloadMainPanel = new JPanel();
-        //JScrollPane scrollPane = new JScrollPane();
-        //scrollPane.setLocation(740,0);
-        //scrollPane.setSize(20,550);
+
         //downloadMainPanel.add(scrollPane); //todo:add scroll
         downloadMainPanel.setLocation(200,50);
         downloadMainPanel.setSize(785,590);
@@ -425,6 +469,7 @@ public class MainFrame extends JFrame {
         //BoxLayout layout = new BoxLayout(downloadMainPanel,BoxLayout.Y_AXIS);
         GridLayout layout = new GridLayout(0,1);
         downloadMainPanel.setLayout(null);
+        //downloadMainPanel.setLayout(new BoxLayout(downloadMainPanel,BoxLayout.Y_AXIS));
         downloadMainPanel.setBackground(Color.decode("#d8e8d7"));
         //downloadMainPanel.setBorder(BorderFactory.createBevelBorder(1));// todo: mabye must be removed
         return downloadMainPanel;
@@ -485,5 +530,37 @@ public class MainFrame extends JFrame {
         return windowStateListener;
     }
 
+    private void addDownload(){
+        readSettingFile();
+        new AddDownload();
+        if(SettingFileInfo.getItems().addState == 1){
+            AddNewItemDownloadToFrame();
+            //String[] fileInfo = SettingFileInfo.getItems().fileInfo.split("<>"); //[0]-fileLink [1]-fileName
+            //downloadFile(downloadMainPanel,fileInfo[0],SettingFileInfo.getItems().saveDir + fileInfo[1]);
+
+        }
+    }
+
+    private void showAbout(){
+        JDialog frame = new JDialog();
+        frame.setModal(true);
+        frame.setSize(495,365);
+        JLabel label = new JLabel();
+        ImageIcon img = new ImageIcon("Files//About.png");
+        label.setIcon(img);
+        frame.add(label);
+        frame.setVisible(true);
+    }
+
+    private void showguide(){
+        JDialog frame = new JDialog();
+        frame.setModal(true);
+        frame.setSize(495,375);
+        JLabel label = new JLabel();
+        ImageIcon img = new ImageIcon("Files//guide.png");
+        label.setIcon(img);
+        frame.add(label);
+        frame.setVisible(true);
+    }
 
 }

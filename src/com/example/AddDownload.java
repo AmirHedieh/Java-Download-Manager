@@ -101,11 +101,11 @@ public class AddDownload {
         ok.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SettingFileInfo.getItems().setAddState(1);
-                String s = link.getText() + "<>" + fileName.getText() + "<>";
-                SettingFileInfo.getItems().setFileInfo(s);
-                SettingFileInfo.getItems().setCheckContinue(1);
-                frame.setVisible(false);
+                    SettingFileInfo.getItems().setAddState(1);
+                    String s = link.getText() + "<>" + fileName.getText() + "<>";
+                    SettingFileInfo.getItems().setFileInfo(s);
+                    SettingFileInfo.getItems().setCheckContinue(1);
+                    frame.setVisible(false);
             }
         });
         frame.getContentPane().add(ok);
