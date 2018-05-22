@@ -23,6 +23,7 @@ public class MainFrame extends JFrame {
 
     //constructor
     public MainFrame(){
+        DataReader dataReader = new DataReader();
         addDataSaverToCloseOperation();
         this.setLocation(450,170); //location frame opens
         this.setSize(991,707);// original size from main program
@@ -30,7 +31,7 @@ public class MainFrame extends JFrame {
         Image image = Toolkit.getDefaultToolkit().getImage("Files//EagleGetIcons//icon.png");
         this.setIconImage(image);
         this.setResizable(false);
-        readSettingFile();
+        //readSettingFile();
         try {
             setLook(); // set look and feel
         } catch (ClassNotFoundException e) {
@@ -305,32 +306,32 @@ public class MainFrame extends JFrame {
         this.setJMenuBar(menuBar);
     }
 
-    private void readSettingFile(){
-        File settingFile = new File("Files//Settings.txt");
-        if (settingFile.exists()){
-            //System.out.println("File found");
-        }
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(settingFile));
-        } catch (IOException e1) {
-            System.out.println("Can't Write setting File");
-        }
-        String input = null;
-        try {
-            input = bufferedReader.readLine();
-        } catch (IOException e) {
-            System.out.println("Couldn't mak String");
-        }
-       // System.out.println(input);
-        String[] splitString = input.split(" ");
-
-        SettingFileInfo items = new SettingFileInfo();
-        items.lookAndFeel = splitString[0];
-        items.downloadLimit = splitString[1];
-        items.saveDir = splitString[2];
-
-    }
+//    private void readSettingFile(){
+//        File settingFile = new File("Files//Settings.txt");
+//        if (settingFile.exists()){
+//            //System.out.println("File found");
+//        }
+//        BufferedReader bufferedReader = null;
+//        try {
+//            bufferedReader = new BufferedReader(new FileReader(settingFile));
+//        } catch (IOException e1) {
+//            System.out.println("Can't Write setting File");
+//        }
+//        String input = null;
+//        try {
+//            input = bufferedReader.readLine();
+//        } catch (IOException e) {
+//            System.out.println("Couldn't mak String");
+//        }
+//       // System.out.println(input);
+//        String[] splitString = input.split(" ");
+//
+//        SettingFileInfo items = new SettingFileInfo();
+//        items.lookAndFeel = splitString[0];
+//        items.downloadLimit = splitString[1];
+//        items.saveDir = splitString[2];
+//
+//    }
 
     public void setLook() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException { //read Setting file and update settings
 
@@ -516,7 +517,7 @@ public class MainFrame extends JFrame {
     }
 
     private void addDownload(){
-        readSettingFile();
+        //readSettingFile();
         new AddDownload();
         if(SettingFileInfo.getItems().addState == 1){
             AddNewItemDownloadToFrame();

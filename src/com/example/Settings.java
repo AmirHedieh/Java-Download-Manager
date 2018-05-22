@@ -104,32 +104,11 @@ public class Settings { //todo: place components in right locations
         ok.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                File settingFile = new File("Files//Settings.txt");
-                if (settingFile.exists()){
-                    //System.out.println("File found");
-                }
-                BufferedWriter bufferedWriter = null;
-                try {
-                    bufferedWriter = new BufferedWriter(new FileWriter(settingFile));
-                } catch (IOException e1) {
-                    System.out.println("Can't Write setting File");
-                }
-//                String newState = "";
-                 SettingFileInfo.getItems().setLookAndFeel( "" + lookAndFeelChooser.getSelectedItem() );
+
+                SettingFileInfo.getItems().setLookAndFeel( "" + lookAndFeelChooser.getSelectedItem() );
                 SettingFileInfo.getItems().setDownloadLimit( "" + downloadLimit.getSelectedItem() );
                 SettingFileInfo.getItems().setSaveDir(dir);
-//                try {
-//                    bufferedWriter.write(newState);
-//                } catch (IOException e1) {
-//                    System.out.println("Can't Write setting File");
-//                }
-//                finally {
-//                    try {
-//                        bufferedWriter.close();
-//                        frame.setVisible(false);
-//                    } catch (IOException e1) {
-//                    }
-//                }
+                frame.setVisible(false);
             }
         });
 

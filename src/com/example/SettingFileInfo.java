@@ -1,5 +1,8 @@
 package com.example;
 
+/**
+ * it is made just once to hold needed data to use them through other classes
+ */
 public class SettingFileInfo {
 
     //for setting class

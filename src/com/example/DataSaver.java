@@ -11,7 +11,7 @@ import java.io.IOException;
 public class DataSaver {
 
     //fields
-    String settingData;
+    String settingData = "";
 
     //constructor
     public  DataSaver(){
@@ -25,6 +25,7 @@ public class DataSaver {
     //methods
     private void makeSettingString(){
         settingData += SettingFileInfo.getItems().lookAndFeel + " >> "+ SettingFileInfo.getItems().downloadLimit + " >> " + SettingFileInfo.getItems().saveDir;
+        System.out.println(settingData);
     }
 
     private void writeSettingFile(){
@@ -32,7 +33,7 @@ public class DataSaver {
         try {
             outputStream = new FileOutputStream("Files//Settings.jdm");
         } catch (FileNotFoundException e) {
-            System.out.println("Settings.jdm was not found!");
+            System.out.println("Settings.jdm was not found to write!");
         }
         byte[] bytes = settingData.getBytes();
         try {
