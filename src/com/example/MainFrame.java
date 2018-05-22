@@ -7,7 +7,6 @@ import java.io.*;
 import java.util.ArrayList;
 
 import static java.lang.System.exit;
-import static java.lang.System.setOut;
 
 /**
  * Main frame of the download manager
@@ -24,6 +23,7 @@ public class MainFrame extends JFrame {
 
     //constructor
     public MainFrame(){
+        addDataSaverToCloseOperation();
         this.setLocation(450,170); //location frame opens
         this.setSize(991,707);// original size from main program
         addSystemTray();
@@ -44,7 +44,7 @@ public class MainFrame extends JFrame {
         }
 
         this.getContentPane().setLayout(null);
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        //this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //setUndecorated(true); //todo : add ur own close-minimize/maximize icons
         // this.setLocationRelativeTo(makeCategories());
         JComponent toolBar = makeToolbar();
@@ -546,5 +546,17 @@ public class MainFrame extends JFrame {
         frame.setVisible(true);
     }
 
+
+    /**
+     * when closing program it calls DataSaver Class to save data
+     */
+    private void addDataSaverToCloseOperation(){
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                DataSaver saver = new DataSaver();
+                System.exit(0);
+            }
+        });
+    }
 
 }

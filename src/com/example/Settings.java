@@ -114,22 +114,22 @@ public class Settings { //todo: place components in right locations
                 } catch (IOException e1) {
                     System.out.println("Can't Write setting File");
                 }
-                String newState = "";
-                newState += lookAndFeelChooser.getSelectedItem() + " ";
-                newState += downloadLimit.getSelectedItem() + " ";
-                newState += dir;
-                try {
-                    bufferedWriter.write(newState);
-                } catch (IOException e1) {
-                    System.out.println("Can't Write setting File");
-                }
-                finally {
-                    try {
-                        bufferedWriter.close();
-                        frame.setVisible(false);
-                    } catch (IOException e1) {
-                    }
-                }
+//                String newState = "";
+                 SettingFileInfo.getItems().setLookAndFeel( "" + lookAndFeelChooser.getSelectedItem() );
+                SettingFileInfo.getItems().setDownloadLimit( "" + downloadLimit.getSelectedItem() );
+                SettingFileInfo.getItems().setSaveDir(dir);
+//                try {
+//                    bufferedWriter.write(newState);
+//                } catch (IOException e1) {
+//                    System.out.println("Can't Write setting File");
+//                }
+//                finally {
+//                    try {
+//                        bufferedWriter.close();
+//                        frame.setVisible(false);
+//                    } catch (IOException e1) {
+//                    }
+//                }
             }
         });
 
