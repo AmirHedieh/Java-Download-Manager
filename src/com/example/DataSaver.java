@@ -12,41 +12,83 @@ public class DataSaver {
 
     //fields
     String settingData = "";
+    String downloadsData = "";
+    String removedDownloadsData = "";
+    String queueDownloadData = "";
 
     //constructor
     public  DataSaver(){
-        //save settings
         makeSettingString();
-        writeSettingFile();
+        makeDownloadsSaveString();
+        makeQueueSaveString();
+        makeRemovedDownloadsSaveString();
 
-        //settings saved
+        writeSettingFile();
+        writeDownloadSaveFile();
+        writeQueueSaveFile();
+        writeRemovedDownloadsSaveFile();
     }
 
     //methods
     private void makeSettingString(){
         settingData += SettingFileInfo.getItems().lookAndFeel + " >> "+ SettingFileInfo.getItems().downloadLimit + " >> " + SettingFileInfo.getItems().saveDir;
-        System.out.println(settingData);
+    }
+
+    private void makeDownloadsSaveString(){
+        for(int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++) {
+            downloadsData += SettingFileInfo.getItems().downloads.get(i).getLink() + " >> " +  SettingFileInfo.getItems().downloads.get(i).getName() + "\r\n";
+        }
+    }
+
+    private void makeRemovedDownloadsSaveString(){
+        for(int i = 0 ; i < SettingFileInfo.getItems().removed.size() ; i++) {
+            removedDownloadsData += SettingFileInfo.getItems().removed.get(i).getLink() + " >> " +  SettingFileInfo.getItems().removed.get(i).getName() + "\r\n";
+        }
+    }
+
+    private void makeQueueSaveString(){
+        for(int i = 0 ; i < SettingFileInfo.getItems().queue.size() ; i++) {
+            queueDownloadData += SettingFileInfo.getItems().queue.get(i).getLink() + " >> " +  SettingFileInfo.getItems().queue.get(i).getName() + "\r\n";
+        }
     }
 
     private void writeSettingFile(){
+        saveFile("Files//Settings.jdm",settingData);
+    }
+
+    private void writeDownloadSaveFile(){
+        saveFile("Files//list.jdm",downloadsData);
+    }
+
+    private void writeRemovedDownloadsSaveFile(){
+        saveFile("Files//removed.jdm",removedDownloadsData);
+    }
+
+    private void writeQueueSaveFile(){
+        saveFile("Files//queue.jdm",queueDownloadData);
+    }
+
+    private void saveFile(String path,String string){
         FileOutputStream outputStream = null;
         try {
-            outputStream = new FileOutputStream("Files//Settings.jdm");
+            outputStream = new FileOutputStream(path);
         } catch (FileNotFoundException e) {
-            System.out.println("Settings.jdm was not found to write!");
+            System.out.println(string + "was not found to write!");
         }
-        byte[] bytes = settingData.getBytes();
+        byte[] bytes = string.getBytes();
         try {
             outputStream.write(bytes);
         } catch (IOException e) {
-            System.out.println("Couldnt write Setting.jdm");
+            System.out.println("Couldn't write" + string);
         }
         finally {
             try {
                 outputStream.close();
             } catch (IOException e) {
-                System.out.printf("Couldnt close output Stream!");
+                System.out.printf("Couldn't close output Stream!");
             }
         }
     }
+
+
 }

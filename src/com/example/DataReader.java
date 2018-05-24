@@ -13,6 +13,9 @@ public class DataReader {
     public DataReader(){
         SettingFileInfo items = new SettingFileInfo(); // it is made just once to hold needed data to use them through other classes
         readSettingsFile();
+        initializeArrayList("downloads",readDownloadsData("Files//list.jdm"));
+        initializeArrayList("removed",readDownloadsData("Files//removed.jdm"));
+        initializeArrayList("queue",readDownloadsData("Files//queue.jdm"));
     }
 
     private void readSettingsFile(){
@@ -36,8 +39,61 @@ public class DataReader {
         } catch (IOException e) {
             System.out.println("Couldn't read setting.jdm");
         }
+    }
 
+    private String readDownloadsData(String path){
+        File downloads = new File(path);
+        BufferedReader bufferedReader = null;
+        FileReader fileReader = null;
+        try {
+            fileReader = new FileReader(downloads);
+            bufferedReader = new BufferedReader(fileReader);
+        } catch (FileNotFoundException e) {
+            System.out.println(path + " was not found to read!");
+        }
+        String line;
+        String totalText = "";
+        try {
+            while((line = bufferedReader.readLine()) != null) {
+                line += "\n";
+                totalText += line;
+            }
+        } catch (IOException e) {
+            System.out.println("Couldn't read " + path);
+        }
+        finally {
+            try {
+                fileReader.close();
+                System.out.println(totalText);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return totalText;
+        }
+    }
 
+    private void initializeArrayList(String panelType,String inputString){
+        if(inputString.equals("")){
+            return;
+        }
+        String[] lines = inputString.split("\n");
+        for(int i = 0 ; i < lines.length ; i++){
+            String[] splitString = lines[i].split(" >> ");
+            if(panelType.equals("downloads")){
+                System.out.println("link-" + splitString[0]);
+                System.out.println("name-" + splitString[1]);
+                Download newDl = new Download(splitString[0],splitString[1]);
+                SettingFileInfo.getItems().addDownloadToList(newDl);
+            }
+            else if(panelType.equals("removed")){
+                Download newDl = new Download(splitString[0],splitString[1]);
+                SettingFileInfo.getItems().addToRemovedList(newDl);
+            }
+            else if(panelType.equals("queue")){
+                Download newDl = new Download(splitString[0],splitString[1]);
+                SettingFileInfo.getItems().addToQueueList(newDl);
+            }
+        }
     }
 
 }

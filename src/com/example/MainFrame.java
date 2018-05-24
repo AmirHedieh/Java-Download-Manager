@@ -27,6 +27,7 @@ public class MainFrame extends JFrame {
     //constructor
     public MainFrame(){
         DataReader dataReader = new DataReader(); //loads data from saves at the launch of program
+
         addDataSaverToCloseOperation(); // add saving operation to close button
 
         this.setLocation(450,170); //location frame opens
@@ -62,6 +63,7 @@ public class MainFrame extends JFrame {
 
         addMenuBar();
 
+        paintMainDlPanel(1); //when program starts from a save the first panel that is shown is downloads Panel
         this.setVisible(true);
     }
 
@@ -161,11 +163,25 @@ public class MainFrame extends JFrame {
             else if(name[i].equals("remove")){
                 button.addActionListener(e -> {
                     if(selectedDownload != null) {
-                        if(listType.equals("download")){
-                            downloadMainPanel.remove(selectedDownload);
-                            //SettingFileInfo.getItems().removeFromDownloadList(selectedDownload);
+                        if(listType.equals("downloads")){
+                            String selectedName = selectedDownload.getName();
+                            int num = Integer.parseInt(selectedName);
+                            SettingFileInfo.getItems().addToRemovedList(SettingFileInfo.getItems().downloads.get(num));
+                            SettingFileInfo.getItems().removeFromDownloadList(num);
+                            paintMainDlPanel(1);
                         }
-                        System.out.println("remove Pressed");
+                        else if(listType.equals("removed")){
+                            String selectedName = selectedDownload.getName();
+                            int num = Integer.parseInt(selectedName);
+                            SettingFileInfo.getItems().removeFromRemovedList(num);
+                            paintMainDlPanel(2);
+                        }
+                        else if(listType.equals("queue")){
+                            String selectedName = selectedDownload.getName();
+                            int num = Integer.parseInt(selectedName);
+                            SettingFileInfo.getItems().removeFromQueueList(num);
+                            paintMainDlPanel(3);
+                        }
                     }
                     else{
                         System.out.println("No Download Selected!");
@@ -394,9 +410,9 @@ public class MainFrame extends JFrame {
         repaint();
 
         for(int i = 0 ; i < list.size() ; i++){
-            list.get(i).setNumberOfDownload(i);
             JPanel newDlPanel = new JPanel();
             newDlPanel.setLayout(null);
+            newDlPanel.setName("" + i);
             newDlPanel.setBackground(Color.decode("#ffe1ad"));
            // newDlPanel.setSize(new Dimension(785,80));
             //newDlPanel.setLocation(0,height);
@@ -454,21 +470,12 @@ public class MainFrame extends JFrame {
 
             repaint();
             String fileLink = list.get(i).getLink();
-            new Thread(() -> {
-                downloadFile(progressBar,fileLink,savePath);
-            }).start();
+
+            new Thread(() -> downloadFile(progressBar, fileLink, savePath)).start();
 
             SettingFileInfo.getItems().setAddState(0); // change the add state to primal state
             SettingFileInfo.getItems().checkContinue = 0;
         }
-
-        numOfDownloadItems++;
-        if(numOfDownloadItems > 7){
-           // downloadMainPanel.setLayout(new BoxLayout(downloadMainPanel,BoxLayout.Y_AXIS));
-        }
-
-
-
 
     }
 
@@ -506,7 +513,7 @@ public class MainFrame extends JFrame {
     private JComponent makeMainDownloadPanel(){
         downloadMainPanel = new JPanel();
         downloadMainPanel.setLocation(200,50);
-        downloadMainPanel.setSize(785,590);
+        downloadMainPanel.setSize(785,600);
         //downloadMainPanel.setLayout(new GridLayout(8,1,0,1));
         BoxLayout boxLayout = new BoxLayout(downloadMainPanel,BoxLayout.Y_AXIS);
         GridLayout gridLayout = new GridLayout(8,1,0,1);

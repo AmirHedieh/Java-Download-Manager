@@ -23,13 +23,27 @@ public class SettingFileInfo {
 
     private static SettingFileInfo items;
 
-    public void addDownloadToList(Download newDL){
-        downloads.add(newDL);
+    public void addDownloadToList(Download newDl){
+        downloads.add(newDl);
     }
-
     public void removeFromDownloadList(int i){
         downloads.remove(i);
     }
+
+    public void addToRemovedList(Download newDl){
+        removed.add(newDl);
+    }
+    public void removeFromRemovedList(int i){
+        removed.remove(i);
+    }
+
+    public void addToQueueList(Download newDl){
+        queue.add(newDl);
+    }
+    public void removeFromQueueList(int i){
+        queue.remove(i);
+    }
+
     public void setLookAndFeel(String s){
         lookAndFeel = s;
     }
