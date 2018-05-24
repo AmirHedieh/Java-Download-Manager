@@ -14,6 +14,8 @@ public class SettingFileInfo {
     //done
     //for MainDownloadPanel
     ArrayList<Download> downloads = new ArrayList<>();
+    ArrayList<Download> removed = new ArrayList<>();
+    ArrayList<Download> queue = new ArrayList<>();
     //done
     public int addState = 0;
     public String fileInfo;
@@ -25,6 +27,9 @@ public class SettingFileInfo {
         downloads.add(newDL);
     }
 
+    public void removeFromDownloadList(int i){
+        downloads.remove(i);
+    }
     public void setLookAndFeel(String s){
         lookAndFeel = s;
     }

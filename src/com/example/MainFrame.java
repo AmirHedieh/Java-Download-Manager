@@ -15,7 +15,7 @@ import static java.lang.System.exit;
  */
 public class MainFrame extends JFrame {
 
-    private JPanel downloadMainPanel = new JPanel();
+    private JPanel downloadMainPanel;
 
     private static int height = 0;
     private static int numOfDownloadItems = 0; //used to change downloadMainPanel layout when reaching max space
@@ -51,12 +51,12 @@ public class MainFrame extends JFrame {
 
         this.getContentPane().setLayout(null);
 
-        modifyPanel(downloadMainPanel);
+        JComponent dlPanel = makeMainDownloadPanel();
         JComponent toolBar = makeToolbar();
         JComponent category = makeCategories();
         this.getContentPane().add(category);
         this.getContentPane().add(toolBar);
-        this.getContentPane().add(downloadMainPanel);
+        this.getContentPane().add(dlPanel);
 
         addMenuBar();
 
@@ -229,23 +229,19 @@ public class MainFrame extends JFrame {
             if(buttonName[i].equals("Processing                      ")){
                 button.addActionListener(e -> {
                     System.out.println("Processing");
-                    getContentPane().add(downloadMainPanel);
-                    repaint();
+                    paintMainDlPanel(1);
                 });
 
             }
             else  if(buttonName[i].equals("Removed                         ")){
                 button.addActionListener(e -> {
                     System.out.println("removed");
-                    //getContentPane().add(removedPanel);
-                    revalidate();
+                    paintMainDlPanel(2);
                 });
             }
             else  if(buttonName[i].equals("Queue                              ")){
                 button.addActionListener(e -> {
-                    System.out.println("queue");
-                    //getContentPane().add(queuePanel);
-                    repaint();
+                    paintMainDlPanel(3);
                 });
             }
             panel.add(button);
@@ -361,67 +357,93 @@ public class MainFrame extends JFrame {
 
     }
 
-    private void AddNewItemDownloadToFrame(){
-        String[] fileInfo = SettingFileInfo.getItems().fileInfo.split("<>"); //[0]-fileLink [1]-fileName
+    /**
+     * gets an int as type which determines that it must paint which one of panels( 1-download list 2-removed list 3-queue list)
+     *then it paint a panel with these ArrayLists
+     * @param type
+     */
+    private void paintMainDlPanel(int type){
+        ArrayList<Download> list = null;
+        if(type == 1){
+             list = SettingFileInfo.getItems().downloads;
+        }
+        else if(type == 2){
+             list = SettingFileInfo.getItems().removed;
+        }
+        else if(type == 3){
+             list = SettingFileInfo.getItems().queue;
+        }
+
+        downloadMainPanel.removeAll();
+        repaint();
+        
+        for(int i = 0 ; i < list.size() ; i++){
+            JPanel newDlPanel = new JPanel();
+            newDlPanel.setLayout(null);
+            newDlPanel.setSize(new Dimension(785,80));
+            newDlPanel.setLocation(0,height);
+
+            JLabel icon = new JLabel(new ImageIcon("Files//dlIcon.png"));
+            icon.setSize(40,40);
+            icon.setLocation(10,20);
+            newDlPanel.add(icon);
+
+            File getSizeFile = new File(list.get(i).link);
+            JLabel fileName = new JLabel( list.get(i).name + "     " + getSizeFile.length() / 1000 + " KB" );
+            //JLabel fileLink = new JLabel(SettingFileInfo.getItems().downloads.get(i).link);
+            fileName.setLocation(70,14);
+            fileName.setSize(300,15);
+            fileName.setForeground(Color.GRAY);
+            newDlPanel.add(fileName);
+
+            JProgressBar progressBar = new JProgressBar(0,100);
+            progressBar.setSize(500,20);
+            progressBar.setLocation(70,34);
+            progressBar.setValue(0);
+            progressBar.setStringPainted(true);
+            newDlPanel.add(progressBar);
+
+            JButton open = new JButton(new ImageIcon("Files//open.png"));
+            open.setSize(15,15);
+            open.setBorder(BorderFactory.createEmptyBorder()); // remove the border of the button to make it looks like a flat image on panel
+            open.setBackground(Color.decode("#ffe1ad"));
+            open.setLocation(progressBar.getLocation().x + progressBar.getSize().width + 5,progressBar.getLocation().y);
+            String savePath = SettingFileInfo.getItems().saveDir + list.get(i).name;
+            open.addActionListener(e -> {
+                File file = new File(savePath);
+                Desktop desktop = Desktop.getDesktop();
+                if(file.exists()) {
+                    try {
+                        desktop.open(file);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            });
+            newDlPanel.add(open);
+
+            height += 81; //cause next download file location come to the before one
+            newDlPanel.setBackground(Color.decode("#ffe1ad"));
+            downloadMainPanel.add(newDlPanel);
+
+            repaint();
+            String fileLink = list.get(i).link;
+            new Thread(() -> {
+                downloadFile(progressBar,fileLink,savePath);
+            }).start();
+
+            SettingFileInfo.getItems().setAddState(0); // change the add state to primal state
+            SettingFileInfo.getItems().checkContinue = 0;
+        }
+
         numOfDownloadItems++;
         if(numOfDownloadItems > 7){
-            downloadMainPanel.setLayout(new BoxLayout(downloadMainPanel,BoxLayout.Y_AXIS));
+           // downloadMainPanel.setLayout(new BoxLayout(downloadMainPanel,BoxLayout.Y_AXIS));
         }
-        JPanel newDlPanel = new JPanel();
-        newDlPanel.setLayout(null);
-        newDlPanel.setSize(new Dimension(785,80));
-        newDlPanel.setLocation(0,height);
-
-        JLabel icon = new JLabel(new ImageIcon("Files//dlIcon.png"));
-        icon.setSize(40,40);
-        icon.setLocation(10,20);
-        newDlPanel.add(icon);
-
-        File getSizeFile = new File(fileInfo[0]);
-        JLabel fileName = new JLabel( fileInfo[1] + "     " + getSizeFile.length() / 1000 + " KB" );
-        JLabel fileLink = new JLabel(fileInfo[0]);
-        fileName.setLocation(70,14);
-        fileName.setSize(300,15);
-        fileName.setForeground(Color.GRAY);
-        newDlPanel.add(fileName);
-
-        JProgressBar progressBar = new JProgressBar(0,100);
-        progressBar.setSize(500,20);
-        progressBar.setLocation(70,34);
-        progressBar.setValue(0);
-        progressBar.setStringPainted(true);
-        newDlPanel.add(progressBar);
-
-        JButton open = new JButton(new ImageIcon("Files//open.png"));
-        open.setSize(15,15);
-        open.setBorder(BorderFactory.createEmptyBorder()); // remove the border of the button to make it looks like a flat image on panel
-        open.setBackground(Color.decode("#ffe1ad"));
-        open.setLocation(progressBar.getLocation().x + progressBar.getSize().width + 5,progressBar.getLocation().y);
-        open.addActionListener(e -> {
-            File file = new File(SettingFileInfo.getItems().saveDir + fileInfo[1]);
-            Desktop desktop = Desktop.getDesktop();
-            if(file.exists()) {
-                try {
-                    desktop.open(file);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
-        newDlPanel.add(open);
-
-        height += 81; //cause next download file location come to the before one
-        newDlPanel.setBackground(Color.decode("#ffe1ad"));
-        downloadMainPanel.add(newDlPanel);
 
 
-        repaint();
-        new Thread(() -> {
-                downloadFile(progressBar,fileInfo[0],SettingFileInfo.getItems().saveDir + fileInfo[1]);
-        }).start();
 
-        SettingFileInfo.getItems().setAddState(0); // change the add state to primal state
-        SettingFileInfo.getItems().checkContinue = 0;
+
     }
 
     public void downloadFile(JProgressBar jb, String srcPath , String dstPath){ //copy a file from src to dst path
@@ -454,14 +476,16 @@ public class MainFrame extends JFrame {
 
     /**
      * gets one panel and sets size and its position in the main frame
-     * @param panel
      */
-    private void modifyPanel(JPanel panel){
-        panel.setLocation(200,50);
-        panel.setSize(785,590);
-        GridLayout layout = new GridLayout(0,1);
-        panel.setLayout(new GridLayout(8,1,0,1));
-        panel.setBackground(Color.decode("#d8e8d7"));
+    private JComponent makeMainDownloadPanel(){
+        downloadMainPanel = new JPanel();
+        downloadMainPanel.setLocation(200,50);
+        downloadMainPanel.setSize(785,590);
+        //downloadMainPanel.setLayout(new GridLayout(8,1,0,1));
+        BoxLayout boxLayout = new BoxLayout(downloadMainPanel,BoxLayout.Y_AXIS);
+        downloadMainPanel.setLayout(boxLayout);
+        downloadMainPanel.setBackground(Color.decode("#d8e8d7"));
+        return downloadMainPanel;
     }
 
     public boolean addSystemTray() {
@@ -521,7 +545,7 @@ public class MainFrame extends JFrame {
         //readSettingFile();
         new AddDownload();
         if(SettingFileInfo.getItems().addState == 1){
-            AddNewItemDownloadToFrame();
+            paintMainDlPanel(1);
 
         }
     }
