@@ -21,7 +21,9 @@ public class MainFrame extends JFrame {
     private static int numOfDownloadItems = 0; //used to change downloadMainPanel layout when reaching max space
     private TrayIcon trayIcon;
     private SystemTray tray;
-
+    private JPanel selectedDownload;
+    private ArrayList<Download> list;
+    private String listType;
     //constructor
     public MainFrame(){
         DataReader dataReader = new DataReader(); //loads data from saves at the launch of program
@@ -157,7 +159,18 @@ public class MainFrame extends JFrame {
             }
 
             else if(name[i].equals("remove")){
-                button.addActionListener(e -> System.out.println("remove Pressed"));
+                button.addActionListener(e -> {
+                    if(selectedDownload != null) {
+                        if(listType.equals("download")){
+                            downloadMainPanel.remove(selectedDownload);
+                            //SettingFileInfo.getItems().removeFromDownloadList(selectedDownload);
+                        }
+                        System.out.println("remove Pressed");
+                    }
+                    else{
+                        System.out.println("No Download Selected!");
+                    }
+                });
             }
 
             else if(name[i].equals("settings")) {
@@ -363,33 +376,38 @@ public class MainFrame extends JFrame {
      * @param type
      */
     private void paintMainDlPanel(int type){
-        ArrayList<Download> list = null;
+
         if(type == 1){
              list = SettingFileInfo.getItems().downloads;
+             listType = "downloads";
         }
         else if(type == 2){
              list = SettingFileInfo.getItems().removed;
+            listType = "removed";
         }
         else if(type == 3){
              list = SettingFileInfo.getItems().queue;
+            listType = "queue";
         }
 
         downloadMainPanel.removeAll();
         repaint();
-        
+
         for(int i = 0 ; i < list.size() ; i++){
+            list.get(i).setNumberOfDownload(i);
             JPanel newDlPanel = new JPanel();
             newDlPanel.setLayout(null);
-            newDlPanel.setSize(new Dimension(785,80));
-            newDlPanel.setLocation(0,height);
+            newDlPanel.setBackground(Color.decode("#ffe1ad"));
+           // newDlPanel.setSize(new Dimension(785,80));
+            //newDlPanel.setLocation(0,height);
 
             JLabel icon = new JLabel(new ImageIcon("Files//dlIcon.png"));
             icon.setSize(40,40);
             icon.setLocation(10,20);
             newDlPanel.add(icon);
 
-            File getSizeFile = new File(list.get(i).link);
-            JLabel fileName = new JLabel( list.get(i).name + "     " + getSizeFile.length() / 1000 + " KB" );
+            File getSizeFile = new File(list.get(i).getLink());
+            JLabel fileName = new JLabel( list.get(i).getName() + "     " + getSizeFile.length() / 1000 + " KB" );
             //JLabel fileLink = new JLabel(SettingFileInfo.getItems().downloads.get(i).link);
             fileName.setLocation(70,14);
             fileName.setSize(300,15);
@@ -408,7 +426,7 @@ public class MainFrame extends JFrame {
             open.setBorder(BorderFactory.createEmptyBorder()); // remove the border of the button to make it looks like a flat image on panel
             open.setBackground(Color.decode("#ffe1ad"));
             open.setLocation(progressBar.getLocation().x + progressBar.getSize().width + 5,progressBar.getLocation().y);
-            String savePath = SettingFileInfo.getItems().saveDir + list.get(i).name;
+            String savePath = SettingFileInfo.getItems().saveDir + list.get(i).getName();
             open.addActionListener(e -> {
                 File file = new File(savePath);
                 Desktop desktop = Desktop.getDesktop();
@@ -421,13 +439,21 @@ public class MainFrame extends JFrame {
                 }
             });
             newDlPanel.add(open);
-
-            height += 81; //cause next download file location come to the before one
-            newDlPanel.setBackground(Color.decode("#ffe1ad"));
+            newDlPanel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if(selectedDownload != null) {
+                        selectedDownload.setBackground(Color.decode("#ffe1ad"));
+                    }
+                    selectedDownload = newDlPanel;
+                    newDlPanel.setBackground(Color.decode("#8dacef"));
+                }
+            });
+           // height += 81; //cause next download file location come to the before one;
             downloadMainPanel.add(newDlPanel);
 
             repaint();
-            String fileLink = list.get(i).link;
+            String fileLink = list.get(i).getLink();
             new Thread(() -> {
                 downloadFile(progressBar,fileLink,savePath);
             }).start();
@@ -483,7 +509,8 @@ public class MainFrame extends JFrame {
         downloadMainPanel.setSize(785,590);
         //downloadMainPanel.setLayout(new GridLayout(8,1,0,1));
         BoxLayout boxLayout = new BoxLayout(downloadMainPanel,BoxLayout.Y_AXIS);
-        downloadMainPanel.setLayout(boxLayout);
+        GridLayout gridLayout = new GridLayout(8,1,0,1);
+        downloadMainPanel.setLayout(gridLayout);
         downloadMainPanel.setBackground(Color.decode("#d8e8d7"));
         return downloadMainPanel;
     }
