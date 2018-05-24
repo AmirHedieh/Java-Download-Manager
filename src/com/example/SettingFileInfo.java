@@ -1,5 +1,7 @@
 package com.example;
 
+import java.util.ArrayList;
+
 /**
  * it is made just once to hold needed data to use them through other classes
  */
@@ -10,11 +12,18 @@ public class SettingFileInfo {
     public String downloadLimit;
     public String lookAndFeel;
     //done
+    //for MainDownloadPanel
+    ArrayList<Download> downloads = new ArrayList<>();
+    //done
     public int addState = 0;
     public String fileInfo;
     public int checkContinue = 0; //when user goes in add menu program waits until user make a choice
 
     private static SettingFileInfo items;
+
+    public void addDownloadToList(Download newDL){
+        downloads.add(newDL);
+    }
 
     public void setLookAndFeel(String s){
         lookAndFeel = s;

@@ -98,8 +98,9 @@ public class AddDownload {
         ok.setLocation(430,270);
         ok.addActionListener(e -> {
                 SettingFileInfo.getItems().setAddState(1);
-                String s = link.getText() + "<>" + fileName.getText() + "<>";
-                SettingFileInfo.getItems().setFileInfo(s);
+                //String s = link.getText() + "<>" + fileName.getText() + "<>";
+                SettingFileInfo.getItems().addDownloadToList(new Download(link.getText(),fileName.getText()));
+                //SettingFileInfo.getItems().setFileInfo(s);
                 SettingFileInfo.getItems().setCheckContinue(1);
                 frame.setVisible(false);
         });

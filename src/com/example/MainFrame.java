@@ -15,7 +15,8 @@ import static java.lang.System.exit;
  */
 public class MainFrame extends JFrame {
 
-    private JPanel downloadMainPanel;
+    private JPanel downloadMainPanel = new JPanel();
+
     private static int height = 0;
     private static int numOfDownloadItems = 0; //used to change downloadMainPanel layout when reaching max space
     private TrayIcon trayIcon;
@@ -23,15 +24,19 @@ public class MainFrame extends JFrame {
 
     //constructor
     public MainFrame(){
-        DataReader dataReader = new DataReader();
-        addDataSaverToCloseOperation();
+        DataReader dataReader = new DataReader(); //loads data from saves at the launch of program
+        addDataSaverToCloseOperation(); // add saving operation to close button
+
         this.setLocation(450,170); //location frame opens
         this.setSize(991,707);// original size from main program
+
         addSystemTray();
+
         Image image = Toolkit.getDefaultToolkit().getImage("Files//EagleGetIcons//icon.png");
         this.setIconImage(image);
+
         this.setResizable(false);
-        //readSettingFile();
+
         try {
             setLook(); // set look and feel
         } catch (ClassNotFoundException e) {
@@ -45,19 +50,16 @@ public class MainFrame extends JFrame {
         }
 
         this.getContentPane().setLayout(null);
-        //this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        //setUndecorated(true); //todo : add ur own close-minimize/maximize icons
-        // this.setLocationRelativeTo(makeCategories());
+
+        modifyPanel(downloadMainPanel);
         JComponent toolBar = makeToolbar();
         JComponent category = makeCategories();
-        JComponent dlPanel = makeDownloadPanel();
-        this.getContentPane().add(category, BorderLayout.WEST);
-        this.getContentPane().add(toolBar,BorderLayout.NORTH);
-        this.getContentPane().add(dlPanel,BorderLayout.CENTER);
-       // this.getContentPane().setComponentZOrder(category,0);
-        //this.getContentPane().setComponentZOrder(toolBar,1);
+        this.getContentPane().add(category);
+        this.getContentPane().add(toolBar);
+        this.getContentPane().add(downloadMainPanel);
 
         addMenuBar();
+
         this.setVisible(true);
     }
 
@@ -204,9 +206,9 @@ public class MainFrame extends JFrame {
                     toolTip[i] = "Downloads in Progress";
                     break;
                 case 1:
-                    buttonName[i] = "Completed                       ";
-                    fileAddress[i] = "Files//EagleGetIcons//completed.png";
-                    toolTip[i] = "Completed Downloads";
+                    buttonName[i] = "Removed                         ";
+                    fileAddress[i] = "Files//EagleGetIcons//Completed.png";
+                    toolTip[i] = "Removed Downloads";
                     break;
                 case 2:
                     buttonName[i] = "Queue                              ";
@@ -224,6 +226,28 @@ public class MainFrame extends JFrame {
             button.setForeground(Color.LIGHT_GRAY);
             button.setBackground(Color.decode("#32363f")); // set button background same as panel color
             button.setBorder(BorderFactory.createCompoundBorder()); // remove the border of the button to make it looks like a flat image on panel
+            if(buttonName[i].equals("Processing                      ")){
+                button.addActionListener(e -> {
+                    System.out.println("Processing");
+                    getContentPane().add(downloadMainPanel);
+                    repaint();
+                });
+
+            }
+            else  if(buttonName[i].equals("Removed                         ")){
+                button.addActionListener(e -> {
+                    System.out.println("removed");
+                    //getContentPane().add(removedPanel);
+                    revalidate();
+                });
+            }
+            else  if(buttonName[i].equals("Queue                              ")){
+                button.addActionListener(e -> {
+                    System.out.println("queue");
+                    //getContentPane().add(queuePanel);
+                    repaint();
+                });
+            }
             panel.add(button);
         }
         return panel;
@@ -288,7 +312,10 @@ public class MainFrame extends JFrame {
         exit = new JMenuItem("Exit");
         KeyStroke ctrlEKeyStroke = KeyStroke.getKeyStroke("control E");
         exit.setAccelerator(ctrlEKeyStroke);
-        exit.addActionListener(e -> exit(0));
+        exit.addActionListener(e -> {
+            exit(0);
+            DataSaver saver = new DataSaver();
+        });
 
         about = new JMenuItem("About");
         KeyStroke shiftAKeyStroke = KeyStroke.getKeyStroke("shift E");
@@ -306,32 +333,6 @@ public class MainFrame extends JFrame {
         this.setJMenuBar(menuBar);
     }
 
-//    private void readSettingFile(){
-//        File settingFile = new File("Files//Settings.txt");
-//        if (settingFile.exists()){
-//            //System.out.println("File found");
-//        }
-//        BufferedReader bufferedReader = null;
-//        try {
-//            bufferedReader = new BufferedReader(new FileReader(settingFile));
-//        } catch (IOException e1) {
-//            System.out.println("Can't Write setting File");
-//        }
-//        String input = null;
-//        try {
-//            input = bufferedReader.readLine();
-//        } catch (IOException e) {
-//            System.out.println("Couldn't mak String");
-//        }
-//       // System.out.println(input);
-//        String[] splitString = input.split(" ");
-//
-//        SettingFileInfo items = new SettingFileInfo();
-//        items.lookAndFeel = splitString[0];
-//        items.downloadLimit = splitString[1];
-//        items.saveDir = splitString[2];
-//
-//    }
 
     public void setLook() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException { //read Setting file and update settings
 
@@ -411,7 +412,6 @@ public class MainFrame extends JFrame {
 
         height += 81; //cause next download file location come to the before one
         newDlPanel.setBackground(Color.decode("#ffe1ad"));
-
         downloadMainPanel.add(newDlPanel);
 
 
@@ -452,15 +452,16 @@ public class MainFrame extends JFrame {
         }
     }
 
-    private JComponent makeDownloadPanel(){
-        downloadMainPanel = new JPanel();
-        //todo:add scroll
-        downloadMainPanel.setLocation(200,50);
-        downloadMainPanel.setSize(785,590);
+    /**
+     * gets one panel and sets size and its position in the main frame
+     * @param panel
+     */
+    private void modifyPanel(JPanel panel){
+        panel.setLocation(200,50);
+        panel.setSize(785,590);
         GridLayout layout = new GridLayout(0,1);
-        downloadMainPanel.setLayout(null);
-        downloadMainPanel.setBackground(Color.decode("#d8e8d7"));
-        return downloadMainPanel;
+        panel.setLayout(new GridLayout(8,1,0,1));
+        panel.setBackground(Color.decode("#d8e8d7"));
     }
 
     public boolean addSystemTray() {
