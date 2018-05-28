@@ -126,8 +126,8 @@ public class MainFrame extends JFrame {
                     break;
                 case 7:
                     fileAddress[i] = "Files//EagleGetIcons//grabber.png";
-                    toolTip[i] = "Grabber";
-                    name[i] = "grabber";
+                    toolTip[i] = "Queue";
+                    name[i] = "queue";
                     break;
                 case 8:
                     fileAddress[i] = "Files//EagleGetIcons//batchdownload.png";
@@ -193,6 +193,20 @@ public class MainFrame extends JFrame {
                 button.addActionListener(e -> new Settings());
             }
 
+            else if(name[i].equals("queue")) {
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if(selectedDownload == null){
+                            return;
+                        }
+                        String selectedName = selectedDownload.getName();
+                        int num = Integer.parseInt(selectedName);
+                        SettingFileInfo.getItems().addToQueueList(SettingFileInfo.getItems().downloads.get(num));
+                        selectedDownload = null;
+                    }
+                });
+            }
             buttonList.add(button);
             toolPanel.add(button);
             if(i == 0 || i == 3 || i == 4 || i == 5 || i == 8){
