@@ -22,7 +22,7 @@ public class MainFrame extends JFrame {
     private TrayIcon trayIcon;
     private SystemTray tray;
     private JPanel selectedDownload;
-    private ArrayList<Download> list;
+    ArrayList<Download> matchedSearches = new ArrayList<>();
     private String listType;
     //constructor
     public MainFrame(){
@@ -220,9 +220,41 @@ public class MainFrame extends JFrame {
         searchBar.setForeground(Color.GRAY);
         searchBar.setBackground(Color.decode("#c8e2ba"));
         searchBar.setBorder(BorderFactory.createLineBorder(Color.gray));
+        JButton searchButton  = new JButton();
+        searchButton.setBackground(Color.decode("#c8e2ba"));
+        searchButton.setPreferredSize(new Dimension(22,30));
+        searchButton.setIcon(new ImageIcon("Files//search.png"));
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(searchBar.getText());
+                searchInDownloads(searchBar.getText());
+            }
+        });
         toolPanel.add(searchBar);
+        toolPanel.add(searchButton);
         return toolPanel;
         //todo : add line gap between different buttons like in original program
+    }
+
+    public void searchInDownloads(String searchedText){
+        matchedSearches = new ArrayList<>();
+        ArrayList<Download> items = null;
+        if(listType.equals("downloads")){
+            items = SettingFileInfo.getItems().downloads;
+        }
+        else if(listType.equals("removed")){
+            items = SettingFileInfo.getItems().removed;
+        }
+        else if(listType.equals("queue")){
+            items = SettingFileInfo.getItems().queue;
+        }
+        for(int i = 0 ; i < items.size() ; i++ ){
+            if(items.get(i).getName().contains(searchedText) || items.get(i).getLink().contains(searchedText)){
+                matchedSearches.add(items.get(i));
+            }
+        }
+        paintMainDlPanel(4);
     }
 
     private JComponent makeCategories(){
@@ -406,7 +438,7 @@ public class MainFrame extends JFrame {
      * @param type
      */
     private void paintMainDlPanel(int type){
-
+         ArrayList<Download> list = new ArrayList<>();
         if(type == 1){
              list = SettingFileInfo.getItems().downloads;
              listType = "downloads";
@@ -418,6 +450,9 @@ public class MainFrame extends JFrame {
         else if(type == 3){
              list = SettingFileInfo.getItems().queue;
             listType = "queue";
+        }
+        else if(type == 4){
+            list = matchedSearches;
         }
 
         downloadMainPanel.removeAll();
