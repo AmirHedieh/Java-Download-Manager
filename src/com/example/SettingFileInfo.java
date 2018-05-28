@@ -16,6 +16,7 @@ public class SettingFileInfo {
     ArrayList<Download> downloads = new ArrayList<>();
     ArrayList<Download> removed = new ArrayList<>();
     ArrayList<Download> queue = new ArrayList<>();
+    ArrayList<String> restrictedSitesList = new ArrayList<>();
     //done
     public int addState = 0;
     public String fileInfo;
@@ -42,6 +43,12 @@ public class SettingFileInfo {
     }
     public void removeFromQueueList(int i){
         queue.remove(i);
+    }
+    public void addToRestrictedSites(String s){
+        restrictedSitesList.add(s);
+    }
+    public void removeFromRestrictedSites(String s){
+        restrictedSitesList.remove(s);
     }
 
     public void setLookAndFeel(String s){

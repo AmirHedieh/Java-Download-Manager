@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
 
 public class Settings { //todo: place components in right locations
@@ -15,7 +17,11 @@ public class Settings { //todo: place components in right locations
     private JComboBox downloadLimit;
     private JButton openFile;
     private JFileChooser address;
+    private JDialog restrictedSites;
+    private JButton restrictedButton;
     private JButton ok = new JButton(new ImageIcon("Files//ok.png"));
+    JPanel selectedPanel = null;
+    String selectedPanelString = null;
     private JButton cancel = new JButton(new ImageIcon("Files//cancel.png"));
     private String dir = new String("F://Projects//term2//JDM//Files");
 
@@ -38,13 +44,111 @@ public class Settings { //todo: place components in right locations
         makeLookComboBox();
         makeDownloadLimitComboBox();
         makeFileChooser();
+        makeRestrictedSitesFrame();
         addOkAction();
         addCancelAction();
+        addRestrcitedButtonAction();
         frame.setVisible(true);
     }
 
     //methods
+    private void makeRestrictedSitesFrame(){
+        restrictedSites = new JDialog();
+        restrictedSites.setSize(700,500);
+        restrictedSites.setLocationRelativeTo(null);
+        restrictedSites.setLayout(null);
+        restrictedSites.setModal(true);
+        JButton add = new JButton("Add");
+        JButton remove = new JButton("Remove");
+        add.setSize(80,40);
+        add.setLocation(5,5);
+        remove.setSize(80,40);
+        remove.setLocation(90,5);
+        restrictedSites.add(add);
+        add.addActionListener(e -> addSite());
+        restrictedSites.add(remove);
+        remove.addActionListener(e -> removeSite());
+        JPanel sites = new JPanel();
+        sites.setSize(675,395);
+        sites.setLocation(5,50);
+        LayoutManager layoutManager = new GridLayout(17,0,0,1);
+        sites.setLayout(layoutManager);
+        sites.setBackground(Color.decode("#ffc9ad"));
+        restrictedSites.add(sites);
+        if(SettingFileInfo.getItems().restrictedSitesList.size() != 0) {
+            for (int i = 0; i < SettingFileInfo.getItems().restrictedSitesList.size(); i++) {
+                JPanel item = new JPanel();
+                item.setBackground(Color.decode("#55ff3d"));
+                item.setLayout(null);
+                JLabel link = new JLabel();
+                link.setLocation(1,1);
+                link.setSize(650,20);
+                link.setText(SettingFileInfo.getItems().restrictedSitesList.get(i));
+                item.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        if(selectedPanel!=null){
+                            selectedPanel.setBackground(Color.decode("#55ff3d"));
+                        }
+                        selectedPanel = item;
+                        item.setBackground(Color.decode("#2b60ff"));
+                        selectedPanelString = link.getText();
+                    }
+                });
+                item.add(link);
+                sites.add(item);
+            }
+        }
+        restrictedSites.repaint();
+    }
 
+    private void addSite(){
+        JDialog siteAdder = new JDialog();
+        siteAdder.setLayout(null);
+        siteAdder.setSize(700,130);
+        siteAdder.setLocationRelativeTo(null);
+        siteAdder.setModal(true);
+
+        JTextField link = new JTextField();
+        link.setLocation(5,20);
+        link.setSize(600,40);
+        siteAdder.add(link);
+
+        JButton button = new JButton("Add");
+        button.setSize(70,38);
+        button.setLocation(link.getX() + link.getSize().width + 2 ,link.getY());
+        button.addActionListener(e -> {
+            if(!link.getText().equals("")){
+                SettingFileInfo.getItems().addToRestrictedSites(link.getText());
+            }
+            siteAdder.setVisible(false);
+            restrictedSites.setVisible(false);
+            makeRestrictedSitesFrame();
+            restrictedSites.setVisible(true);
+        });
+        siteAdder.add(button);
+        siteAdder.setVisible(true);
+    }
+
+    private void removeSite(){
+        SettingFileInfo.getItems().removeFromRestrictedSites(selectedPanelString);
+        restrictedSites.setVisible(false);
+        makeRestrictedSitesFrame();
+        restrictedSites.setVisible(true);
+    }
+
+    private void addRestrcitedButtonAction(){
+        restrictedButton = new JButton("Restricted Sites");
+        restrictedButton.setSize(140,30);
+        restrictedButton.setLocation(180,160);
+        restrictedButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                restrictedSites.setVisible(true);
+            }
+        });
+        frame.add(restrictedButton);
+    }
     private void makeFileChooser(){
         address = new JFileChooser();
         openFile = new JButton("Set Path");
