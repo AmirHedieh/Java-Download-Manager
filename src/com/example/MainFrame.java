@@ -253,12 +253,20 @@ public class MainFrame extends JFrame {
         JMenuItem byTime = new JMenuItem("Time (G to L)");
         JMenuItem byTime2 = new JMenuItem("Time (L to G)");
 
+        bySize.addActionListener(e->{
+            Arranger.sortBySize(1);
+            paintMainDlPanel(1);
+        });
+        bySize2.addActionListener(e->{
+            Arranger.sortBySize(2);
+            paintMainDlPanel(1);
+        });
         byName.addActionListener(e -> {
-            SettingFileInfo.getItems().sortByName(1);
+            Arranger.sortByName(1);
             paintMainDlPanel(1);
         });
         byName2.addActionListener(e->{
-            SettingFileInfo.getItems().sortByName(2);
+            Arranger.sortByName(2);
             paintMainDlPanel(1);
         });
         mainMenu.add(bySize);
