@@ -224,6 +224,12 @@ public class MainFrame extends JFrame {
         searchButton.setBackground(Color.decode("#c8e2ba"));
         searchButton.setPreferredSize(new Dimension(22,30));
         searchButton.setIcon(new ImageIcon("Files//search.png"));
+        searchBar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                searchBar.setText("");
+            }
+        });
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
