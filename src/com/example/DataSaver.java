@@ -15,6 +15,7 @@ public class DataSaver {
     String downloadsData = "";
     String removedDownloadsData = "";
     String queueDownloadData = "";
+    String restrictedSites = "";
 
     //constructor
     public  DataSaver(){
@@ -22,11 +23,13 @@ public class DataSaver {
         makeDownloadsSaveString();
         makeQueueSaveString();
         makeRemovedDownloadsSaveString();
+        makeRestrictedSitesString();
 
         writeSettingFile();
         writeDownloadSaveFile();
         writeQueueSaveFile();
         writeRemovedDownloadsSaveFile();
+        wrtieRestrictedSitesSaveFile();
     }
 
     //methods
@@ -52,6 +55,12 @@ public class DataSaver {
         }
     }
 
+    private void makeRestrictedSitesString(){
+        for(int i = 0 ; i < SettingFileInfo.getItems().restrictedSitesList.size() ; i++){
+            restrictedSites += SettingFileInfo.getItems().restrictedSitesList.get(i) + "\r\n";
+        }
+    }
+
     private void writeSettingFile(){
         saveFile("Files//Settings.jdm",settingData);
     }
@@ -68,6 +77,9 @@ public class DataSaver {
         saveFile("Files//queue.jdm",queueDownloadData);
     }
 
+    private void wrtieRestrictedSitesSaveFile(){
+        saveFile("Files//filter.jdm",restrictedSites);
+    }
     private void saveFile(String path,String string){
         FileOutputStream outputStream = null;
         try {

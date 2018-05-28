@@ -16,6 +16,7 @@ public class DataReader {
         initializeArrayList("downloads",readDownloadsData("Files//list.jdm"));
         initializeArrayList("removed",readDownloadsData("Files//removed.jdm"));
         initializeArrayList("queue",readDownloadsData("Files//queue.jdm"));
+        initializeArrayList("restricted",readDownloadsData("Files//filter.jdm"));
     }
 
     private void readSettingsFile(){
@@ -92,6 +93,9 @@ public class DataReader {
             else if(panelType.equals("queue")){
                 Download newDl = new Download(splitString[0],splitString[1]);
                 SettingFileInfo.getItems().addToQueueList(newDl);
+            }
+            else if(panelType.equals("restricted")){
+                SettingFileInfo.getItems().addToRestrictedSites(lines[i]);
             }
         }
     }
