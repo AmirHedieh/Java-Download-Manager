@@ -17,8 +17,6 @@ public class MainFrame extends JFrame {
 
     private JPanel downloadMainPanel;
 
-    private static int height = 0;
-    private static int numOfDownloadItems = 0; //used to change downloadMainPanel layout when reaching max space
     private TrayIcon trayIcon;
     private SystemTray tray;
     private JPanel selectedDownload;
@@ -111,7 +109,7 @@ public class MainFrame extends JFrame {
                     break;
                 case 4:
                     fileAddress[i] = "Files//EagleGetIcons//sort.png";
-                    toolTip[i] = "Sort";
+                    toolTip[i] = "Sort-Right Click";
                     name[i] = "sort";
                     break;
                 case 5:
@@ -207,6 +205,9 @@ public class MainFrame extends JFrame {
                     }
                 });
             }
+            else if(name[i].equals("sort")){
+                button.setComponentPopupMenu(makeSortMenu());
+            }
             buttonList.add(button);
             toolPanel.add(button);
             if(i == 0 || i == 3 || i == 4 || i == 5 || i == 8){
@@ -243,7 +244,33 @@ public class MainFrame extends JFrame {
         //todo : add line gap between different buttons like in original program
     }
 
-    public void searchInDownloads(String searchedText){
+    private JPopupMenu makeSortMenu(){
+        JPopupMenu mainMenu = new JPopupMenu();
+        JMenuItem bySize = new JMenuItem("Size (G to L)");
+        JMenuItem bySize2 = new JMenuItem("Size (L to G)");
+        JMenuItem byName = new JMenuItem("Name (G to L)");
+        JMenuItem byName2 = new JMenuItem("Name (L to G)");
+        JMenuItem byTime = new JMenuItem("Time (G to L)");
+        JMenuItem byTime2 = new JMenuItem("Time (L to G)");
+
+        byName.addActionListener(e -> {
+            SettingFileInfo.getItems().sortByName(1);
+            paintMainDlPanel(1);
+        });
+        byName2.addActionListener(e->{
+            SettingFileInfo.getItems().sortByName(2);
+            paintMainDlPanel(1);
+        });
+        mainMenu.add(bySize);
+        mainMenu.add(bySize2);
+        mainMenu.add(byName);
+        mainMenu.add(byName2);
+        mainMenu.add(byTime);
+        mainMenu.add(byTime2);
+        return mainMenu;
+    }
+
+    private void searchInDownloads(String searchedText){
         matchedSearches = new ArrayList<>();
         ArrayList<Download> items = null;
         if(listType.equals("downloads")){

@@ -9,7 +9,7 @@ public class AddDownload {
     //fields
     JDialog frame = new JDialog();
     JTextField link = new JTextField(" Give a link");
-    JTextField fileName = new JTextField(" Name");
+    JTextField fileName = new JTextField("Name");
     JTextField saveDirecotyr = new JTextField(SettingFileInfo.getItems().saveDir);
     //String fileName = new String();
     JButton ok = new JButton("Ok");
