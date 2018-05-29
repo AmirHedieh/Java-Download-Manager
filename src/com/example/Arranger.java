@@ -61,6 +61,7 @@ public class Arranger {
                 for (int j = 0; j < SettingFileInfo.getItems().downloads.size(); j++) {
                     if (sizes.get(i) == SettingFileInfo.getItems().downloads.get(j).getSize()) {
                         sortedList.add(SettingFileInfo.getItems().downloads.get(j));
+                        break;
                     }
                 }
             }
@@ -70,6 +71,7 @@ public class Arranger {
                 for (int j = 0; j < SettingFileInfo.getItems().downloads.size(); j++) {
                     if (sizes.get(i) == SettingFileInfo.getItems().downloads.get(j).getSize()) {
                         sortedList.add(SettingFileInfo.getItems().downloads.get(j));
+                        break;
                     }
                 }
             }

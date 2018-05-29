@@ -379,7 +379,7 @@ public class MainFrame extends JFrame {
         helpMenu.setMnemonic(KeyEvent.VK_H);
         menuBar.add(downloadMenu);
         menuBar.add(helpMenu);
-        JMenuItem add,play,pause,remove,sort,taskcleaner,vidsniffer,grabber,settings,exit;
+        JMenuItem add,play,pause,remove,sort,taskcleaner,vidsniffer,zipper,settings,exit;
         JMenuItem about,userGuide;
         add = new JMenuItem("Add New Download");
         KeyStroke ctrlAKeyStroke = KeyStroke.getKeyStroke("control A");
@@ -416,10 +416,13 @@ public class MainFrame extends JFrame {
         vidsniffer.setAccelerator(ctrlVKeyStroke);
         vidsniffer.addActionListener(e -> System.out.println("Video Sniffer"));
 
-        grabber = new JMenuItem("Media Grabber");
-        KeyStroke ctrlMKeyStroke = KeyStroke.getKeyStroke("control M");
-        grabber.setAccelerator(ctrlMKeyStroke);
-        grabber.addActionListener(e -> System.out.println("Media Grabber"));
+        zipper = new JMenuItem("Export");
+        KeyStroke ctrlMKeyStroke = KeyStroke.getKeyStroke("control Z");
+        zipper.setAccelerator(ctrlMKeyStroke);
+        zipper.addActionListener(e ->{
+            new DataSaver();
+            new ZipMaker();}
+        );
 
         settings = new JMenuItem("Settings");
         KeyStroke ctrlSKeyStroke = KeyStroke.getKeyStroke("control S");
@@ -444,7 +447,7 @@ public class MainFrame extends JFrame {
         userGuide.setAccelerator(shiftHKeyStroke);
         userGuide.addActionListener(e -> showguide());
 
-        downloadMenu.add(add); downloadMenu.add(play); downloadMenu.add(pause); downloadMenu.add(remove); downloadMenu.add(sort); downloadMenu.add(taskcleaner); downloadMenu.add(vidsniffer); downloadMenu.add(grabber);
+        downloadMenu.add(add); downloadMenu.add(play); downloadMenu.add(pause); downloadMenu.add(remove); downloadMenu.add(sort); downloadMenu.add(taskcleaner); downloadMenu.add(vidsniffer); downloadMenu.add(zipper);
         downloadMenu.add(settings); downloadMenu.add(exit);
         helpMenu.add(userGuide); helpMenu.add(about);
         this.setJMenuBar(menuBar);
@@ -708,7 +711,8 @@ public class MainFrame extends JFrame {
     private void addDataSaverToCloseOperation(){
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
-                DataSaver saver = new DataSaver();
+                Arranger.sortByTime(1);
+                new DataSaver();
                 System.exit(0);
             }
         });
