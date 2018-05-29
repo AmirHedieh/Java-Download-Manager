@@ -30,9 +30,9 @@ public class DataReader {
         try {
             String saves = bufferedReader.readLine();
             String[] splitSaves = saves.split(" >> ");
-            System.out.println(splitSaves[0]);
-            System.out.println(splitSaves[1]);
-            System.out.println(splitSaves[2]);
+            //System.out.println(splitSaves[0]);
+            //System.out.println(splitSaves[1]);
+            //System.out.println(splitSaves[2]);
             SettingFileInfo.getItems().setLookAndFeel(splitSaves[0]);
             SettingFileInfo.getItems().setDownloadLimit(splitSaves[1]);
             SettingFileInfo.getItems().setSaveDir(splitSaves[2]);
@@ -65,7 +65,7 @@ public class DataReader {
         finally {
             try {
                 fileReader.close();
-                System.out.println(totalText);
+                //System.out.println(totalText);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -83,15 +83,16 @@ public class DataReader {
             if(panelType.equals("downloads")){
                 System.out.println("link-" + splitString[0]);
                 System.out.println("name-" + splitString[1]);
-                Download newDl = new Download(splitString[0],splitString[1]);
+                System.out.println("time-" + splitString[2]);
+                Download newDl = new Download(splitString[0],splitString[1],splitString[2]);
                 SettingFileInfo.getItems().addDownloadToList(newDl);
             }
             else if(panelType.equals("removed")){
-                Download newDl = new Download(splitString[0],splitString[1]);
+                Download newDl = new Download(splitString[0],splitString[1],splitString[2]);
                 SettingFileInfo.getItems().addToRemovedList(newDl);
             }
             else if(panelType.equals("queue")){
-                Download newDl = new Download(splitString[0],splitString[1]);
+                Download newDl = new Download(splitString[0],splitString[1],splitString[2]);
                 SettingFileInfo.getItems().addToQueueList(newDl);
             }
             else if(panelType.equals("restricted")){

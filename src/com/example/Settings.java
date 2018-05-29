@@ -190,7 +190,6 @@ public class Settings { //todo: place components in right locations
         String[] list = new String[plaf.length];
         for(int i = 0 ; i < plaf.length ; i++){
             list[i] = plaf[i].getName();
-            //System.out.println(plaf[i].getName());
         }
         for(int i = 0 ; i < list.length ; i++){
             if(list[i].equals("Windows Classic")){

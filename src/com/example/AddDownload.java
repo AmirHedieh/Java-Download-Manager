@@ -2,6 +2,8 @@ package com.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class AddDownload {
@@ -98,13 +100,17 @@ public class AddDownload {
         ok.setLocation(430,270);
         ok.addActionListener(e -> {
                 SettingFileInfo.getItems().setAddState(1);
-                //String s = link.getText() + "<>" + fileName.getText() + "<>";
-                SettingFileInfo.getItems().addDownloadToList(new Download(link.getText(),fileName.getText()));
-                //SettingFileInfo.getItems().setFileInfo(s);
+                SettingFileInfo.getItems().addDownloadToList(new Download(link.getText(),fileName.getText(),setStartTime()));
                 SettingFileInfo.getItems().setCheckContinue(1);
                 frame.setVisible(false);
         });
         frame.getContentPane().add(ok);
+    }
+
+    private String setStartTime(){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
+        Date date = new Date();
+        return formatter.format(date);
     }
 
     private void addActionToaddFile(){

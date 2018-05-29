@@ -231,12 +231,9 @@ public class MainFrame extends JFrame {
                 searchBar.setText("");
             }
         });
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(searchBar.getText());
-                searchInDownloads(searchBar.getText());
-            }
+        searchButton.addActionListener(e -> {
+            System.out.println(searchBar.getText());
+            searchInDownloads(searchBar.getText());
         });
         toolPanel.add(searchBar);
         toolPanel.add(searchButton);
@@ -267,6 +264,14 @@ public class MainFrame extends JFrame {
         });
         byName2.addActionListener(e->{
             Arranger.sortByName(2);
+            paintMainDlPanel(1);
+        });
+        byTime.addActionListener(e->{
+            Arranger.sortByTime(1);
+            paintMainDlPanel(1);
+        });
+        byTime2.addActionListener(e->{
+            Arranger.sortByTime(2);
             paintMainDlPanel(1);
         });
         mainMenu.add(bySize);
@@ -344,14 +349,14 @@ public class MainFrame extends JFrame {
             button.setBorder(BorderFactory.createCompoundBorder()); // remove the border of the button to make it looks like a flat image on panel
             if(buttonName[i].equals("Processing                      ")){
                 button.addActionListener(e -> {
-                    System.out.println("Processing");
+                   // System.out.println("Processing");
                     paintMainDlPanel(1);
                 });
 
             }
             else  if(buttonName[i].equals("Removed                         ")){
                 button.addActionListener(e -> {
-                    System.out.println("removed");
+                   // System.out.println("removed");
                     paintMainDlPanel(2);
                 });
             }
