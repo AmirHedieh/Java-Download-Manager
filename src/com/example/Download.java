@@ -8,7 +8,8 @@ public class Download {
     private String name;
     private long size;
     private String time;
-    private boolean completed;
+    //boolean inQueue = false;
+    private boolean completed = false;
     private int QueueStartMinute = 0 ;
     private int QueueStartHour = 0;
 

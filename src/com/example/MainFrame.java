@@ -663,8 +663,15 @@ public class MainFrame extends JFrame {
 
             repaint();
             String fileLink = list.get(i).getLink();
-
-            new Thread(() -> downloadFile(progressBar, fileLink, savePath)).start();
+            if(! list.get(i).getCompleted()) {
+                Download instance = list.get(i);
+                new Thread(() -> downloadFile(instance, progressBar, fileLink, savePath)).start();
+            }
+            else {
+                progressBar.setValue(100);
+                revalidate();
+                repaint();
+            }
 
             SettingFileInfo.getItems().setAddState(0); // change the add state to primal state
             SettingFileInfo.getItems().checkContinue = 0;
@@ -673,7 +680,7 @@ public class MainFrame extends JFrame {
     }
 
 
-    public void downloadFile(JProgressBar jb, String srcPath , String dstPath){ //copy a file from src to dst path
+    public void downloadFile(Download instance,JProgressBar jb, String srcPath , String dstPath){ //copy a file from src to dst path
         File src = new File(srcPath);
         File dst = new File(dstPath);
         revalidate();
@@ -692,6 +699,9 @@ public class MainFrame extends JFrame {
                 int count = in.read(buffer);
                 out.write(buffer, 0, count);
                 process++;
+                if(process == 100){
+                    instance.setCompleted(true);
+                }
                 repaint();
                 revalidate();
             }
