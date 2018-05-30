@@ -26,6 +26,9 @@ public class AddDownload {
         fileName.setForeground(Color.GRAY);
         saveDirecotyr.setForeground(Color.GRAY);
         frame.setTitle("Add New Download");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            frame.setTitle("دانلود جدید");
+        }
         frame.setModal(true);
         frame.setSize(650,350);
         frame.getContentPane().setBackground(Color.WHITE);
@@ -45,6 +48,9 @@ public class AddDownload {
     private void putComponents(){
 
         JLabel label1 = new JLabel("Link :");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            label1.setText(": لینک");
+        }
         label1.setForeground(Color.BLACK);
         label1.setSize(100,20);
         label1.setLocation(20,50);
@@ -58,6 +64,9 @@ public class AddDownload {
 
 
         JLabel label2 = new JLabel("File Name :");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            label2.setText(": اسم فایل");
+        }
         label2.setForeground(Color.BLACK);
         label2.setSize(100,20);
         label2.setLocation(20,100);
@@ -67,6 +76,9 @@ public class AddDownload {
         frame.getContentPane().add(label2);
 
         JLabel label3 = new JLabel("Save Directory");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            label3.setText(": مکان ذخیره سازی");
+        }
         label3.setForeground(Color.BLACK);
         label3.setSize(100,20);
         label3.setLocation(20,150);

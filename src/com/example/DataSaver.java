@@ -34,7 +34,7 @@ public class DataSaver {
 
     //methods
     private void makeSettingString(){
-        settingData += SettingFileInfo.getItems().lookAndFeel + " >> "+ SettingFileInfo.getItems().downloadLimit + " >> " + SettingFileInfo.getItems().saveDir;
+        settingData += SettingFileInfo.getItems().lookAndFeel + " >> "+ SettingFileInfo.getItems().downloadLimit + " >> " + SettingFileInfo.getItems().saveDir + " >> " + SettingFileInfo.getItems().language;
     }
 
     private void makeDownloadsSaveString(){

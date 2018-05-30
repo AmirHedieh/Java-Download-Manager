@@ -9,12 +9,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 
-public class Settings { //todo: place components in right locations
- //todo:when user change L&F a pop up panel says "PLZ Re run program to change L&F"
+public class Settings {
     //fields
     private JDialog frame = new JDialog();
     private JComboBox lookAndFeelChooser;
     private JComboBox downloadLimit;
+    private JComboBox language;
     private JButton openFile;
     private JFileChooser address;
     private JDialog restrictedSites;
@@ -23,14 +23,17 @@ public class Settings { //todo: place components in right locations
     JPanel selectedPanel = null;
     String selectedPanelString = null;
     private JButton cancel = new JButton(new ImageIcon("Files//cancel.png"));
-    private String dir = new String("F://Projects//term2//JDM//Files");
+    private String dir = new String(SettingFileInfo.getItems().saveDir);
 
     //constructor
     public Settings(){
         frame.setLocation(670,300);
         frame.setTitle("Settings");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            frame.setTitle("تنظیمات");
+        }
         frame.setModal(true);
-        frame.setSize(500,300);
+        frame.setSize(500,400);
         //BoxLayout layout = new BoxLayout(frame.getContentPane(),BoxLayout.Y_AXIS);
         frame.getContentPane().setBackground(Color.decode("#c8e2ba")); // green color
         //frame.getContentPane().setBackground(Color.decode("#32363f")); //gray color
@@ -40,9 +43,13 @@ public class Settings { //todo: place components in right locations
         String[] possibleNumbers = new String[4];
         possibleNumbers[0] = "Unlimited"; possibleNumbers[1] = "1"; possibleNumbers[2] = "4"; possibleNumbers[3] = "8";
         downloadLimit = new JComboBox(possibleNumbers);
+        String[] langs = new String[2];
+        langs[0] = "English"; langs[1] = "Persian";
+        language = new JComboBox(langs);
         updateSettings();
         makeLookComboBox();
         makeDownloadLimitComboBox();
+        makeLanguageComboBox();
         makeFileChooser();
         makeRestrictedSitesFrame();
         addOkAction();
@@ -59,7 +66,12 @@ public class Settings { //todo: place components in right locations
         restrictedSites.setLayout(null);
         restrictedSites.setModal(true);
         JButton add = new JButton("Add");
-        JButton remove = new JButton("Remove");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            add.setText("افزودن");
+        }
+        JButton remove = new JButton("Remove");if(SettingFileInfo.getItems().language.equals("Persian")){
+            remove.setText("حذف");
+        }
         add.setSize(80,40);
         add.setLocation(5,5);
         remove.setSize(80,40);
@@ -115,6 +127,9 @@ public class Settings { //todo: place components in right locations
         siteAdder.add(link);
 
         JButton button = new JButton("Add");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            button.setText("افزودن");
+        }
         button.setSize(70,38);
         button.setLocation(link.getX() + link.getSize().width + 2 ,link.getY());
         button.addActionListener(e -> {
@@ -139,8 +154,11 @@ public class Settings { //todo: place components in right locations
 
     private void addRestrcitedButtonAction(){
         restrictedButton = new JButton("Restricted Sites");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            restrictedButton.setText(" سایت های ممنوعه");
+        }
         restrictedButton.setSize(140,30);
-        restrictedButton.setLocation(180,160);
+        restrictedButton.setLocation(180,170);
         restrictedButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -152,8 +170,11 @@ public class Settings { //todo: place components in right locations
     private void makeFileChooser(){
         address = new JFileChooser();
         openFile = new JButton("Set Path");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            openFile.setText("مسیر ذخیره سازی");
+        }
         openFile.setSize(140,30);
-        openFile.setLocation(180,120);
+        openFile.setLocation(180,215);
         openFile.addActionListener(e -> {
             int i = address.showOpenDialog(frame);
             if( i == JFileChooser.APPROVE_OPTION){
@@ -166,6 +187,9 @@ public class Settings { //todo: place components in right locations
 
     private void makeDownloadLimitComboBox(){ //add a combo box which contains some numbers for setting maximum number of download files
         JLabel label = new JLabel("Files at same time :");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            label.setText(": دانلود های همزمان");
+        }
         label.setSize(120,20);
         label.setLocation(60,80);
         frame.getContentPane().add(label);
@@ -177,6 +201,9 @@ public class Settings { //todo: place components in right locations
 
     private void makeLookComboBox(){ //add a combo box including system look and feels to frame
         JLabel label = new JLabel("Look And Feel :");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            label.setText(": ظاهر برنامه");
+        }
         label.setSize(120,20);
         label.setLocation(60,35);
         frame.getContentPane().add(label);
@@ -185,6 +212,18 @@ public class Settings { //todo: place components in right locations
         frame.getContentPane().add(lookAndFeelChooser);
     }
 
+    private void makeLanguageComboBox(){
+        JLabel label = new JLabel("Language :");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            label.setText(": زبان");
+        }
+        label.setSize(120,20);
+        label.setLocation(60,125);
+        frame.getContentPane().add(label);
+        language.setSize(140,27);
+        language.setLocation(180,125);
+        frame.getContentPane().add(language);
+    }
     private String[] sysLookAndFeels(){ //return System look and feels: metal - nimbus - CDE/Motif - Windows - Windows Classic
         UIManager.LookAndFeelInfo plaf[] = UIManager.getInstalledLookAndFeels();
         String[] list = new String[plaf.length];
@@ -202,7 +241,7 @@ public class Settings { //todo: place components in right locations
     private void addOkAction(){ //add action to OK button, it saves the setting in file directory in a text file
         ok.setSize(80,60);
         ok.setBackground(Color.decode("#c8e2ba"));
-        ok.setLocation(280,195);
+        ok.setLocation(280,295);
         frame.getContentPane().add(ok);
         ok.addActionListener( new ActionListener() {
             @Override
@@ -210,6 +249,7 @@ public class Settings { //todo: place components in right locations
 
                 SettingFileInfo.getItems().setLookAndFeel( "" + lookAndFeelChooser.getSelectedItem() );
                 SettingFileInfo.getItems().setDownloadLimit( "" + downloadLimit.getSelectedItem() );
+                SettingFileInfo.getItems().setLanguage("" + language.getSelectedItem());
                 SettingFileInfo.getItems().setSaveDir(dir);
                 frame.setVisible(false);
             }
@@ -219,7 +259,7 @@ public class Settings { //todo: place components in right locations
 
     private void addCancelAction(){
         cancel.setSize(80,60);
-        cancel.setLocation(380,195);
+        cancel.setLocation(380,295);
         cancel.setBackground(Color.decode("#c8e2ba"));
         frame.getContentPane().add(cancel);
         cancel.addActionListener(new ActionListener() {
@@ -271,6 +311,17 @@ public class Settings { //todo: place components in right locations
             }
             case "8":{
                 downloadLimit.setSelectedItem("8");
+                break;
+            }
+        }
+
+        switch (SettingFileInfo.getItems().language){
+            case "English":{
+                language.setSelectedItem("English");
+                break;
+            }
+            case "Persian":{
+                language.setSelectedItem("Persian");
                 break;
             }
         }

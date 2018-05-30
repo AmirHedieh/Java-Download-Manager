@@ -218,6 +218,9 @@ public class MainFrame extends JFrame {
         JTextField searchBar = new JTextField();
         searchBar.setPreferredSize(new Dimension(170,30));
         searchBar.setText(" Enter File Name");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            searchBar.setText("اینجا نام را وارد کنید");
+        }
         searchBar.setForeground(Color.GRAY);
         searchBar.setBackground(Color.decode("#c8e2ba"));
         searchBar.setBorder(BorderFactory.createLineBorder(Color.gray));
@@ -323,16 +326,25 @@ public class MainFrame extends JFrame {
             switch (i) {
                 case 0:
                     buttonName[i] = "Processing                      "; //todo: find a better way to make button in same size
+                    if(SettingFileInfo.getItems().language.equals("Persian")){
+                        buttonName[i] = "                      در حال پردازش";
+                    }
                     fileAddress[i] = "Files//EagleGetIcons//processing.png";
                     toolTip[i] = "Downloads in Progress";
                     break;
                 case 1:
                     buttonName[i] = "Removed                         ";
+                    if(SettingFileInfo.getItems().language.equals("Persian")){
+                        buttonName[i] = "                      حذف شده ها";
+                    }
                     fileAddress[i] = "Files//EagleGetIcons//Completed.png";
                     toolTip[i] = "Removed Downloads";
                     break;
                 case 2:
                     buttonName[i] = "Queue                              ";
+                    if(SettingFileInfo.getItems().language.equals("Persian")){
+                        buttonName[i] = "                      صف";
+                    }
                     fileAddress[i] = "Files//EagleGetIcons//queue.png";
                     toolTip[i] = "Queue";
                     break;
@@ -347,20 +359,20 @@ public class MainFrame extends JFrame {
             button.setForeground(Color.LIGHT_GRAY);
             button.setBackground(Color.decode("#32363f")); // set button background same as panel color
             button.setBorder(BorderFactory.createCompoundBorder()); // remove the border of the button to make it looks like a flat image on panel
-            if(buttonName[i].equals("Processing                      ")){
+            if(buttonName[i].equals("Processing                      ") || buttonName[i].equals("                      در حال پردازش")){
                 button.addActionListener(e -> {
                    // System.out.println("Processing");
                     paintMainDlPanel(1);
                 });
 
             }
-            else  if(buttonName[i].equals("Removed                         ")){
+            else  if(buttonName[i].equals("Removed                         ")|| buttonName[i].equals("                      حذف شده ها")){
                 button.addActionListener(e -> {
                    // System.out.println("removed");
                     paintMainDlPanel(2);
                 });
             }
-            else  if(buttonName[i].equals("Queue                              ")){
+            else  if(buttonName[i].equals("Queue                              ")|| buttonName[i].equals("                      صف")){
                 button.addActionListener(e -> {
                     paintMainDlPanel(3);
                 });
@@ -373,50 +385,80 @@ public class MainFrame extends JFrame {
     private void addMenuBar(){ //adding Download and Help Menu Bar
         JMenuBar menuBar = new JMenuBar();
         JMenu downloadMenu = new JMenu("Download");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            downloadMenu.setText("دانلود");
+        }
         downloadMenu.setMnemonic(KeyEvent.VK_D);
 
         JMenu helpMenu = new JMenu("Help");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            helpMenu.setText("کمک");
+        }
         helpMenu.setMnemonic(KeyEvent.VK_H);
         menuBar.add(downloadMenu);
         menuBar.add(helpMenu);
         JMenuItem add,play,pause,remove,sort,taskcleaner,vidsniffer,zipper,settings,exit;
         JMenuItem about,userGuide;
         add = new JMenuItem("Add New Download");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            add.setText("دانلود جدید");
+        }
         KeyStroke ctrlAKeyStroke = KeyStroke.getKeyStroke("control A");
         add.setAccelerator(ctrlAKeyStroke);
         add.addActionListener(e -> addDownload());
 
         play = new JMenuItem("Resume");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            play.setText("ادامه");
+        }
         KeyStroke ctrlXKeyStroke = KeyStroke.getKeyStroke("shift P");
         play.setAccelerator(ctrlXKeyStroke);
         play.addActionListener(e -> System.out.println("Resume"));
 
         pause = new JMenuItem("Pause");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            pause.setText("ایست");
+        }
         KeyStroke ctrlPKeyStroke = KeyStroke.getKeyStroke("control P");
         pause.setAccelerator(ctrlPKeyStroke);
         pause.addActionListener(e -> System.out.println("Pause"));
 
         remove= new JMenuItem("Remove");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            remove.setText("حذف");
+        }
         KeyStroke ctrlRKeyStroke = KeyStroke.getKeyStroke("control R");
         remove.setAccelerator(ctrlRKeyStroke);
         remove.addActionListener(e -> System.out.println("Remove"));
 
         sort = new JMenuItem("Sort");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            sort.setText("مرتب سازی");
+        }
         KeyStroke ctrlOKeyStroke = KeyStroke.getKeyStroke("control O");
         sort.setAccelerator(ctrlOKeyStroke);
         sort.addActionListener(e -> System.out.println("Sort"));
 
         taskcleaner = new JMenuItem("Task Cleaner");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            taskcleaner.setText("پاکسازی عمل ها");
+        }
         KeyStroke ctrlTKeyStroke = KeyStroke.getKeyStroke("control T");
         taskcleaner.setAccelerator(ctrlTKeyStroke);
         taskcleaner.addActionListener(e -> System.out.println("Task Cleaner"));
 
         vidsniffer = new JMenuItem("Video Sniffer");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            vidsniffer.setText("ویدئو اسنیفر");
+        }
         KeyStroke ctrlVKeyStroke = KeyStroke.getKeyStroke("control V");
         vidsniffer.setAccelerator(ctrlVKeyStroke);
         vidsniffer.addActionListener(e -> System.out.println("Video Sniffer"));
 
         zipper = new JMenuItem("Export");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            zipper.setText("خروجی دادن");
+        }
         KeyStroke ctrlMKeyStroke = KeyStroke.getKeyStroke("control Z");
         zipper.setAccelerator(ctrlMKeyStroke);
         zipper.addActionListener(e ->{
@@ -425,11 +467,17 @@ public class MainFrame extends JFrame {
         );
 
         settings = new JMenuItem("Settings");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            settings.setText("تنظیمات");
+        }
         KeyStroke ctrlSKeyStroke = KeyStroke.getKeyStroke("control S");
         settings.setAccelerator(ctrlSKeyStroke);
         settings.addActionListener(e -> new Settings());
 
         exit = new JMenuItem("Exit");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            exit.setText("خروج");
+        }
         KeyStroke ctrlEKeyStroke = KeyStroke.getKeyStroke("control E");
         exit.setAccelerator(ctrlEKeyStroke);
         exit.addActionListener(e -> {
@@ -438,11 +486,17 @@ public class MainFrame extends JFrame {
         });
 
         about = new JMenuItem("About");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            about.setText("درباره");
+        }
         KeyStroke shiftAKeyStroke = KeyStroke.getKeyStroke("shift E");
         about.setAccelerator(shiftAKeyStroke);
         about.addActionListener(e -> showAbout());
 
         userGuide = new JMenuItem("User Guide");
+        if(SettingFileInfo.getItems().language.equals("Persian")){
+            userGuide.setText("راهنمای کاربر");
+        }
         KeyStroke shiftHKeyStroke = KeyStroke.getKeyStroke("shift H");
         userGuide.setAccelerator(shiftHKeyStroke);
         userGuide.addActionListener(e -> showguide());

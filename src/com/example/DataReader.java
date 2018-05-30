@@ -36,7 +36,7 @@ public class DataReader {
             SettingFileInfo.getItems().setLookAndFeel(splitSaves[0]);
             SettingFileInfo.getItems().setDownloadLimit(splitSaves[1]);
             SettingFileInfo.getItems().setSaveDir(splitSaves[2]);
-
+            SettingFileInfo.getItems().setLanguage(splitSaves[3]);
         } catch (IOException e) {
             System.out.println("Couldn't read setting.jdm");
         }

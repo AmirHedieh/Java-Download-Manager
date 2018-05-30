@@ -12,6 +12,7 @@ public class SettingFileInfo {
     public String saveDir;
     public String downloadLimit;
     public String lookAndFeel;
+    public String language;
     //done
     //for MainDownloadPanel
     ArrayList<Download> downloads = new ArrayList<>();
@@ -53,6 +54,10 @@ public class SettingFileInfo {
         restrictedSitesList.remove(s);
     }
 
+
+    public void setLanguage(String s){
+        language = s;
+    }
     public void setLookAndFeel(String s){
         lookAndFeel = s;
     }
