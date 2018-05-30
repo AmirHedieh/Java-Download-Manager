@@ -51,7 +51,8 @@ public class DataSaver {
 
     private void makeQueueSaveString(){
         for(int i = 0 ; i < SettingFileInfo.getItems().queue.size() ; i++) {
-            queueDownloadData += SettingFileInfo.getItems().queue.get(i).getLink() + " >> " +  SettingFileInfo.getItems().queue.get(i).getName()  + " >> " + SettingFileInfo.getItems().downloads.get(i).getTime() + "\r\n";
+            queueDownloadData += SettingFileInfo.getItems().queue.get(i).getLink() + " >> " +  SettingFileInfo.getItems().queue.get(i).getName()  + " >> " + SettingFileInfo.getItems().downloads.get(i).getTime()
+                    + " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartMinute() + " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartHour() + "\r\n";
         }
     }
 

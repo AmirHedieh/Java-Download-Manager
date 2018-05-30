@@ -8,6 +8,9 @@ public class Download {
     private String name;
     private long size;
     private String time;
+    private boolean completed;
+    private int QueueStartMinute = 0 ;
+    private int QueueStartHour = 0;
 
     public Download(String link, String name,String time){
         this.link = link;
@@ -38,5 +41,29 @@ public class Download {
 
     public String getTime(){
         return time;
+    }
+
+    public void setCompleted(Boolean b){
+        completed = b;
+    }
+
+    public Boolean getCompleted(){
+        return completed;
+    }
+
+    public int getQueueStartHour() {
+        return QueueStartHour;
+    }
+
+    public int getQueueStartMinute() {
+        return QueueStartMinute;
+    }
+
+    public void setQueueStartHour(int queueStartHour) {
+        QueueStartHour = queueStartHour;
+    }
+
+    public void setQueueStartMinute(int queueStartMinute) {
+        QueueStartMinute = queueStartMinute;
     }
 }

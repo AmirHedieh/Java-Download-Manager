@@ -1,6 +1,8 @@
 package com.example;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -235,7 +237,7 @@ public class MainFrame extends JFrame {
             }
         });
         searchButton.addActionListener(e -> {
-            System.out.println(searchBar.getText());
+            //System.out.println(searchBar.getText());
             searchInDownloads(searchBar.getText());
         });
         toolPanel.add(searchBar);
@@ -552,7 +554,7 @@ public class MainFrame extends JFrame {
         }
         else if(type == 3){
              list = SettingFileInfo.getItems().queue;
-            listType = "queue";
+             listType = "queue";
         }
         else if(type == 4){
             list = matchedSearches;
@@ -617,7 +619,46 @@ public class MainFrame extends JFrame {
                     newDlPanel.setBackground(Color.decode("#8dacef"));
                 }
             });
-           // height += 81; //cause next download file location come to the before one;
+
+            if(listType.equals("queue")){
+                SpinnerModel MinModel = new SpinnerNumberModel(0,0,60,1);
+                JSpinner minuteSpinner = new JSpinner(MinModel);
+                minuteSpinner.setLocation(open.getLocation().x + 60,open.getLocation().y - 2);
+                minuteSpinner.setValue(list.get(i).getQueueStartMinute());
+                JLabel mLabel = new JLabel("Minute");
+                mLabel.setSize(50,20);
+                mLabel.setLocation(minuteSpinner.getLocation().x,minuteSpinner.getLocation().y  + 20);
+                minuteSpinner.setSize(40,20);
+                Download min = list.get(i);
+                ChangeListener listener = new ChangeListener() {
+                    public void stateChanged(ChangeEvent e) {
+                        min.setQueueStartMinute((int)minuteSpinner.getValue());
+                    }
+                };
+                minuteSpinner.addChangeListener(listener);
+
+                newDlPanel.add(mLabel);
+                newDlPanel.add(minuteSpinner);
+
+
+                SpinnerModel HourModel = new SpinnerNumberModel(0,0,12,1);
+                JSpinner hourSpinner = new JSpinner(HourModel);
+                hourSpinner.setLocation(open.getLocation().x + 20,open.getLocation().y - 2);
+                hourSpinner.setSize(40,20);
+                hourSpinner.setValue(list.get(i).getQueueStartHour());
+                JLabel hLabel = new JLabel("Hour");
+                hLabel.setLocation(hourSpinner.getLocation().x,hourSpinner.getLocation().y  + 20);
+                hLabel.setSize(50,20);
+                Download hour = list.get(i);
+                ChangeListener listener2 = new ChangeListener() {
+                    public void stateChanged(ChangeEvent e) {
+                       hour.setQueueStartHour((int)hourSpinner.getValue());
+                    }
+                };
+                hourSpinner.addChangeListener(listener2);
+                newDlPanel.add(hLabel);
+                newDlPanel.add(hourSpinner);
+            }
             downloadMainPanel.add(newDlPanel);
 
             repaint();
@@ -631,6 +672,7 @@ public class MainFrame extends JFrame {
 
     }
 
+
     public void downloadFile(JProgressBar jb, String srcPath , String dstPath){ //copy a file from src to dst path
         File src = new File(srcPath);
         File dst = new File(dstPath);
@@ -638,7 +680,7 @@ public class MainFrame extends JFrame {
         repaint();
         int SI = (int)src.length() / 100;
         if (!src.exists()) {
-            System.out.println("Source file does not exist.");
+            //System.out.println("Source file does not exist.");
             return;
         }
         try (InputStream in = new FileInputStream(src);
@@ -729,7 +771,7 @@ public class MainFrame extends JFrame {
 
     private void addDownload(){
         //readSettingFile();
-        new AddDownload();
+        new NewDownloadPanel();
         if(SettingFileInfo.getItems().addState == 1){
             paintMainDlPanel(1);
 

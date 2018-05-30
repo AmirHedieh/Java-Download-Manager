@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class AddDownload {
+public class NewDownloadPanel {
 
     //fields
     JDialog frame = new JDialog();
@@ -20,7 +20,7 @@ public class AddDownload {
     String dir,dir2;
 
     //constructor
-    public AddDownload(){
+    public NewDownloadPanel(){
 
         link.setForeground(Color.GRAY);
         fileName.setForeground(Color.GRAY);

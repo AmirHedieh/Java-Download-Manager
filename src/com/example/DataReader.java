@@ -81,9 +81,6 @@ public class DataReader {
         for(int i = 0 ; i < lines.length ; i++){
             String[] splitString = lines[i].split(" >> ");
             if(panelType.equals("downloads")){
-                System.out.println("link-" + splitString[0]);
-                System.out.println("name-" + splitString[1]);
-                System.out.println("time-" + splitString[2]);
                 Download newDl = new Download(splitString[0],splitString[1],splitString[2]);
                 SettingFileInfo.getItems().addDownloadToList(newDl);
             }
@@ -93,6 +90,10 @@ public class DataReader {
             }
             else if(panelType.equals("queue")){
                 Download newDl = new Download(splitString[0],splitString[1],splitString[2]);
+                newDl.setQueueStartMinute(Integer.parseInt(splitString[3]));
+                System.out.println(Integer.parseInt(splitString[3]));
+                newDl.setQueueStartHour(Integer.parseInt(splitString[4]));
+                System.out.println(Integer.parseInt(splitString[4]));
                 SettingFileInfo.getItems().addToQueueList(newDl);
             }
             else if(panelType.equals("restricted")){
