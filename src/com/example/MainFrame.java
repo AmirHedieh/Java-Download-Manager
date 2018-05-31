@@ -248,6 +248,10 @@ public class MainFrame extends JFrame {
         //todo : add line gap between different buttons like in original program
     }
 
+    /**
+     * make a menu containing sorts menus (by Size- Name- Time)
+     * @return
+     */
     private JPopupMenu makeSortMenu(){
         JPopupMenu mainMenu = new JPopupMenu();
         JMenuItem bySize = new JMenuItem("Size (G to L)");
@@ -314,6 +318,11 @@ public class MainFrame extends JFrame {
         paintMainDlPanel(4);
     }
 
+    /**
+     * three button on left side of UI are created and put there.
+     * buttons include Processing-Queue-Removed
+     * @return
+     */
     private JComponent makeCategories(){
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel,BoxLayout.Y_AXIS);
@@ -390,6 +399,15 @@ public class MainFrame extends JFrame {
         return panel;
     }
 
+    /**
+     * menu bar on the top of UI is creted
+     * and added to main frame.
+     * menu contains
+     * 1-add new download
+     * 2-exit
+     * 3-sort
+     * ....
+     */
     private void addMenuBar(){ //adding Download and Help Menu Bar
         JMenuBar menuBar = new JMenuBar();
         JMenu downloadMenu = new JMenu("Download");
@@ -515,7 +533,13 @@ public class MainFrame extends JFrame {
         this.setJMenuBar(menuBar);
     }
 
-
+    /**
+     * reads lookAndFeel from SettingFileINfo and set the current LookAndFeel to that
+     * @throws ClassNotFoundException
+     * @throws UnsupportedLookAndFeelException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     public void setLook() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException { //read Setting file and update settings
 
         switch (SettingFileInfo.getItems().lookAndFeel){
@@ -690,7 +714,15 @@ public class MainFrame extends JFrame {
 
     }
 
-
+    /**
+     * process of downloading a file fom system.
+     * reading file from source and writing to destination
+     * it also set the value of progress bar
+     * @param instance
+     * @param jb
+     * @param srcPath
+     * @param dstPath
+     */
     public void downloadFile(Download instance,JProgressBar jb, String srcPath , String dstPath){ //copy a file from src to dst path
         File src = new File(srcPath);
         File dst = new File(dstPath);
@@ -737,6 +769,10 @@ public class MainFrame extends JFrame {
         return downloadMainPanel;
     }
 
+    /**
+     * adding system tray to program
+     * @return
+     */
     public boolean addSystemTray() {
         boolean result = false;
         if (SystemTray.isSupported()) {

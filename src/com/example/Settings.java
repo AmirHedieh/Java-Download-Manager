@@ -9,6 +9,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 
+/**
+ * frame containing Language - DownloadLimit - Save Directory - ...
+ * all changes fro setting are saved in SettingFileInfo Class
+ * adding restricted sites can be done from settings
+ */
 public class Settings {
     //fields
     private JDialog frame = new JDialog();

@@ -2,6 +2,13 @@ package com.example;
 
 import java.io.File;
 
+/**
+ * each download has fields containing crucial data and info about that like link , file name ,
+ * or if it is in queue or not
+ * completed field is true when file is downloaded successfully
+ * inQueue field is true when the download is added to queue
+ * queue timing is available if the download is added to queue
+ */
 public class Download {
     //fields
     private String link;

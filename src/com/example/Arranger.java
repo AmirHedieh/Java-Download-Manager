@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * a class that has methods to sort a collection by names,size,startTime
+ * each sort has 2 kind of sorting. 1 from higher(greater) to lower(lesser)
  */
 public class Arranger {
 

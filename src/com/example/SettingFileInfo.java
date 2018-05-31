@@ -5,6 +5,9 @@ import java.util.Collection;
 
 /**
  * it is made just once to hold needed data to use them through other classes
+ * all data saved at the end of program or
+ * all data read at the start of program
+ * affects here and changes its fields values
  */
 public class SettingFileInfo {
 

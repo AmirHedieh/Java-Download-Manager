@@ -5,7 +5,10 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+/**
+ * a frame for setting needed information to start a new download
+ * adding a new download is done from here
+ */
 public class NewDownloadPanel {
 
     //fields
@@ -44,6 +47,9 @@ public class NewDownloadPanel {
         frame.setVisible(true);
     }
 
+    /**
+     * making UI including link, name,saveDirectory
+     */
     //methods
     private void putComponents(){
 
@@ -89,6 +95,9 @@ public class NewDownloadPanel {
         frame.getContentPane().add(label3);
     }
 
+    /**
+     * cancel button which ignore all works done before and closes the frame without saving any change
+     */
     private void addCancelAction(){
         //cancel.setBackground(Color.green);
         cancel.setSize(100,40);

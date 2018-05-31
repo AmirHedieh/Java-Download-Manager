@@ -6,7 +6,8 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * export all program files like list.jdm,Settings.jdm,removed.jdm ,... to
- * one zip file
+ * one zip file located at project directory
+ * file name is CompressedData.zip
  */
 public class ZipMaker {
 
