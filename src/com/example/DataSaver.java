@@ -40,22 +40,30 @@ public class DataSaver {
     private void makeDownloadsSaveString(){
         for(int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++) {
             downloadsData += SettingFileInfo.getItems().downloads.get(i).getLink() + " >> " +  SettingFileInfo.getItems().downloads.get(i).getName() + " >> " + SettingFileInfo.getItems().downloads.get(i).getTime() +
-                    " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartMinute() + " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartHour() + "\r\n";
+                    " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartMinute() + " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartHour();
+            if(SettingFileInfo.getItems().downloads.get(i).getisInQueue()){
+                downloadsData += " >> " + "inQueue"  + "\r\n";
+            }
+            else {
+                downloadsData += " >> " + "notQueued" + "\r\n";
+            }
         }
     }
 
     private void makeRemovedDownloadsSaveString(){
         for(int i = 0 ; i < SettingFileInfo.getItems().removed.size() ; i++) {
-            removedDownloadsData += SettingFileInfo.getItems().removed.get(i).getLink() + " >> " +  SettingFileInfo.getItems().removed.get(i).getName() + " >> " + SettingFileInfo.getItems().downloads.get(i).getTime()
-            + " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartMinute() + " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartHour()+ "\r\n";
+            removedDownloadsData += SettingFileInfo.getItems().removed.get(i).getLink() + " >> " +  SettingFileInfo.getItems().removed.get(i).getName() + " >> " + SettingFileInfo.getItems().removed.get(i).getTime()
+            + " >> " + SettingFileInfo.getItems().removed.get(i).getQueueStartMinute() + " >> " + SettingFileInfo.getItems().removed.get(i).getQueueStartHour()+ "\r\n";
         }
     }
 
     private void makeQueueSaveString(){
-        for(int i = 0 ; i < SettingFileInfo.getItems().queue.size() ; i++) {
-            queueDownloadData += SettingFileInfo.getItems().queue.get(i).getLink() + " >> " +  SettingFileInfo.getItems().queue.get(i).getName()  + " >> " + SettingFileInfo.getItems().downloads.get(i).getTime()
-                    + " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartMinute() + " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartHour() + "\r\n";
-        }
+        for(int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++) {
+            if(SettingFileInfo.getItems().downloads.get(i).getisInQueue()) {
+                    queueDownloadData += SettingFileInfo.getItems().downloads.get(i).getLink() + " >> " + SettingFileInfo.getItems().downloads.get(i).getName() + " >> " + SettingFileInfo.getItems().downloads.get(i).getTime()
+                            + " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartMinute() + " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartHour() + "\r\n";
+                }
+            }
     }
 
     private void makeRestrictedSitesString(){

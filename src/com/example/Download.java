@@ -8,7 +8,7 @@ public class Download {
     private String name;
     private long size;
     private String time;
-    //boolean inQueue = false;
+    private boolean inQueue = false;
     private boolean completed = false;
     private int QueueStartMinute = 0 ;
     private int QueueStartHour = 0;
@@ -66,5 +66,13 @@ public class Download {
 
     public void setQueueStartMinute(int queueStartMinute) {
         QueueStartMinute = queueStartMinute;
+    }
+
+    public boolean getisInQueue() {
+        return inQueue;
+    }
+
+    public void setInQueue(boolean inQueue) {
+        this.inQueue = inQueue;
     }
 }

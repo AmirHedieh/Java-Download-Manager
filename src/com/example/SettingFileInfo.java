@@ -17,7 +17,6 @@ public class SettingFileInfo {
     //for MainDownloadPanel
     ArrayList<Download> downloads = new ArrayList<>();
     ArrayList<Download> removed = new ArrayList<>();
-    ArrayList<Download> queue = new ArrayList<>();
     ArrayList<String> restrictedSitesList = new ArrayList<>();
 
     //done
@@ -41,12 +40,6 @@ public class SettingFileInfo {
         removed.remove(i);
     }
 
-    public void addToQueueList(Download newDl){
-        queue.add(newDl);
-    }
-    public void removeFromQueueList(int i){
-        queue.remove(i);
-    }
     public void addToRestrictedSites(String s){
         restrictedSitesList.add(s);
     }

@@ -83,26 +83,20 @@ public class DataReader {
             if(panelType.equals("downloads")){
                 Download newDl = new Download(splitString[0],splitString[1],splitString[2]);
                 newDl.setQueueStartMinute(Integer.parseInt(splitString[3]));
-                System.out.println(Integer.parseInt(splitString[3]));
                 newDl.setQueueStartHour(Integer.parseInt(splitString[4]));
-                System.out.println(Integer.parseInt(splitString[4]));
+                if(splitString[5].equals("inQueue")){
+                    newDl.setInQueue(true);
+                }
                 SettingFileInfo.getItems().addDownloadToList(newDl);
             }
             else if(panelType.equals("removed")){
                 Download newDl = new Download(splitString[0],splitString[1],splitString[2]);
                 newDl.setQueueStartMinute(Integer.parseInt(splitString[3]));
-                System.out.println(Integer.parseInt(splitString[3]));
                 newDl.setQueueStartHour(Integer.parseInt(splitString[4]));
-                System.out.println(Integer.parseInt(splitString[4]));
                 SettingFileInfo.getItems().addToRemovedList(newDl);
             }
             else if(panelType.equals("queue")){
-                Download newDl = new Download(splitString[0],splitString[1],splitString[2]);
-                newDl.setQueueStartMinute(Integer.parseInt(splitString[3]));
-                System.out.println(Integer.parseInt(splitString[3]));
-                newDl.setQueueStartHour(Integer.parseInt(splitString[4]));
-                System.out.println(Integer.parseInt(splitString[4]));
-                SettingFileInfo.getItems().addToQueueList(newDl);
+                //queue panel is made by downloads. no need to anything here
             }
             else if(panelType.equals("restricted")){
                 SettingFileInfo.getItems().addToRestrictedSites(lines[i]);

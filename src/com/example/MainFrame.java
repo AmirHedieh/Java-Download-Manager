@@ -179,7 +179,8 @@ public class MainFrame extends JFrame {
                         else if(listType.equals("queue")){
                             String selectedName = selectedDownload.getName();
                             int num = Integer.parseInt(selectedName);
-                            SettingFileInfo.getItems().removeFromQueueList(num);
+                            //SettingFileInfo.getItems().removeFromQueueList(num);
+                            SettingFileInfo.getItems().downloads.get(num).setInQueue(false);
                             paintMainDlPanel(3);
                         }
                     }
@@ -202,7 +203,8 @@ public class MainFrame extends JFrame {
                         }
                         String selectedName = selectedDownload.getName();
                         int num = Integer.parseInt(selectedName);
-                        SettingFileInfo.getItems().addToQueueList(SettingFileInfo.getItems().downloads.get(num));
+                        //SettingFileInfo.getItems().addToQueueList(SettingFileInfo.getItems().downloads.get(num));
+                        SettingFileInfo.getItems().downloads.get(num).setInQueue(true);
                         selectedDownload = null;
                     }
                 });
@@ -290,7 +292,7 @@ public class MainFrame extends JFrame {
 
     private void searchInDownloads(String searchedText){
         matchedSearches = new ArrayList<>();
-        ArrayList<Download> items = null;
+        ArrayList<Download> items = new ArrayList<>();
         if(listType.equals("downloads")){
             items = SettingFileInfo.getItems().downloads;
         }
@@ -298,7 +300,11 @@ public class MainFrame extends JFrame {
             items = SettingFileInfo.getItems().removed;
         }
         else if(listType.equals("queue")){
-            items = SettingFileInfo.getItems().queue;
+            for(int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++){
+                if(SettingFileInfo.getItems().downloads.get(i).getisInQueue()){
+                    items.add(SettingFileInfo.getItems().downloads.get(i));
+                }
+            }
         }
         for(int i = 0 ; i < items.size() ; i++ ){
             if(items.get(i).getName().contains(searchedText) || items.get(i).getLink().contains(searchedText)){
@@ -553,7 +559,12 @@ public class MainFrame extends JFrame {
             listType = "removed";
         }
         else if(type == 3){
-             list = SettingFileInfo.getItems().queue;
+             //list = SettingFileInfo.getItems().queue;
+             for(int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++){
+                 if(SettingFileInfo.getItems().downloads.get(i).getisInQueue()){
+                     list.add(SettingFileInfo.getItems().downloads.get(i));
+                 }
+             }
              listType = "queue";
         }
         else if(type == 4){
