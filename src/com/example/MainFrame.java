@@ -175,12 +175,16 @@ public class MainFrame extends JFrame {
                         try {
                             if(selectedDownload != null) {
                                 String selectedName = selectedDownload.getName();
-                                int num = -1;
-                                for (int i = 0 ; i < allWorkers.size() ; i++){
-                                    if(allWorkers.get(i).getName().equals(selectedName)){
-                                        num = i;
+                                int num = Integer.parseInt(selectedName) ;
+                                int sub = 0;
+                                System.out.println(num);
+                                for (int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++){
+                                    if(!SettingFileInfo.getItems().downloads.get(i).isInProgress()){
+                                        sub++;
                                     }
                                 }
+                                System.out.println(sub);
+                                num -= sub;
                                 synchronized (allWorkers.get(num)) {
                                     allWorkers.get(num).wait();
                                 }

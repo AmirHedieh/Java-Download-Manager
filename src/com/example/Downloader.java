@@ -77,6 +77,7 @@ import java.net.URL;
 
 
                     download.setCompleted(true);
+                    download.setInProgress(false);
                     outputStream.close();
                     inputStream.close();
 
