@@ -21,7 +21,7 @@ public class MainFrame extends JFrame {
 
     private JPanel downloadMainPanel;
     private ExecutorService executor; // thread pool to manage downloads
-    private ArrayList<Runnable> allWorkers = new ArrayList<>();
+    private ArrayList<WorkerThread> allWorkers = new ArrayList<>();
     private TrayIcon trayIcon;
     private SystemTray tray;
     private JPanel selectedDownload;
@@ -169,7 +169,28 @@ public class MainFrame extends JFrame {
             }
 
             else if(name[i].equals("pause")){
-                
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            if(selectedDownload != null) {
+                                String selectedName = selectedDownload.getName();
+                                int num = -1;
+                                for (int i = 0 ; i < allWorkers.size() ; i++){
+                                    if(allWorkers.get(i).getName().equals(selectedName)){
+                                        num = i;
+                                    }
+                                }
+                                synchronized (allWorkers.get(num)) {
+                                    allWorkers.get(num).wait();
+                                }
+                            }
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                        }
+
+                    }
+                });
             }
 
             else if(name[i].equals("remove")){
@@ -624,7 +645,9 @@ public class MainFrame extends JFrame {
                 if(!list.get(i).isInProgress()) { //this if prevents from recalling download process for download when frame refreshes
                     list.get(i).setInProgress(true);
                     JFrame frame = this;
-                    Runnable worker = new WorkerThread(frame, list.get(i), fileLink, savePath);
+                    String s;
+                    WorkerThread worker = new WorkerThread(frame, list.get(i), fileLink, savePath);
+                    worker.setName("" + i);
                     allWorkers.add(worker);
                     executor.execute(worker);
                 }
@@ -895,13 +918,12 @@ public class MainFrame extends JFrame {
     private class WorkerThread implements Runnable{
         JFrame frame;
         Download download;
-        JProgressBar progressBar;
         String fileLink;
         String savePath;
+        String name;
         public WorkerThread(JFrame frame, Download download , String link, String savePath){
             this.frame = frame;
             this.download = download;
-            this.progressBar = progressBar;
             this.fileLink = link;
             this.savePath = savePath;
         }
@@ -913,6 +935,13 @@ public class MainFrame extends JFrame {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        public void setName(String s){
+            name = s;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }

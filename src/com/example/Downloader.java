@@ -19,10 +19,10 @@ import java.net.URL;
         public static void downloadFromNet(JFrame frame,Download download,String fileURL, String saveDir) throws IOException {
             URL url = new URL(fileURL);
             try {
-                System.out.println("HTTP");
+                System.out.println("Download Started!");
                 HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
                 int responseCode = httpConn.getResponseCode();
-                System.out.println(responseCode);
+//                System.out.println(responseCode);
                 // always check HTTP response code first
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     String fileName = "";
@@ -45,14 +45,14 @@ import java.net.URL;
                     download.setSize(contentLength / 1000); // set file size in download object
                     download.setName(fileName);
 
-                    System.out.println("Content-Disposition = " + disposition);
-                    System.out.println("Content-Length = " + contentLength);
+//                    System.out.println("Content-Disposition = " + disposition);
+//                    System.out.println("Content-Length = " + contentLength);
                     System.out.println("fileName = " + fileName);
 
                     InputStream inputStream = httpConn.getInputStream();
 
                     // opens input stream from the HTTP connection
-                    System.out.println(saveDir);
+//                    System.out.println(saveDir);
                     String saveFilePath = saveDir + File.separator + fileName;
 
                     // opens an output stream to save into file
@@ -60,7 +60,7 @@ import java.net.URL;
 
                     int bytesRead = -1;
                     int bufferSize = contentLength / 100;
-                    System.out.println(bufferSize);
+//                    System.out.println(bufferSize);
                     byte[] buffer = new byte[4096];
                     int totalRead = 0;
                     int process = 0; //  between 0-100
