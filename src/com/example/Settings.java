@@ -45,8 +45,8 @@ public class Settings {
         frame.setLayout(null);
         frame.setResizable(false);
         lookAndFeelChooser = new JComboBox(sysLookAndFeels());
-        String[] possibleNumbers = new String[4];
-        possibleNumbers[0] = "Unlimited"; possibleNumbers[1] = "1"; possibleNumbers[2] = "4"; possibleNumbers[3] = "8";
+        String[] possibleNumbers = new String[5];
+        possibleNumbers[0] = "Unlimited"; possibleNumbers[1] = "1";possibleNumbers[2] = "2"; possibleNumbers[3] = "4"; possibleNumbers[4] = "8";
         downloadLimit = new JComboBox(possibleNumbers);
         String[] langs = new String[2];
         langs[0] = "English"; langs[1] = "Persian";

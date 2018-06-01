@@ -17,7 +17,7 @@ public class NewDownloadPanel {
 
     //fields
     JDialog frame = new JDialog();
-    JTextField link = new JTextField(" Give a link");
+    JTextField link = new JTextField("");
     JTextField fileName = new JTextField("Name");
     JTextField saveDirecotyr = new JTextField(SettingFileInfo.getItems().saveDir);
     //String fileName = new String();

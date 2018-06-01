@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static java.lang.System.exit;
 
@@ -18,7 +20,8 @@ import static java.lang.System.exit;
 public class MainFrame extends JFrame {
 
     private JPanel downloadMainPanel;
-
+    private ExecutorService executor; // thread pool to manage downloads
+    private ArrayList<Runnable> allWorkers = new ArrayList<>();
     private TrayIcon trayIcon;
     private SystemTray tray;
     private JPanel selectedDownload;
@@ -27,6 +30,15 @@ public class MainFrame extends JFrame {
     //constructor
     public MainFrame(){
         DataReader dataReader = new DataReader(); //loads data from saves at the launch of program
+        int cores;
+
+        if(SettingFileInfo.getItems().downloadLimit.equals("Unlimited")){
+            cores = Runtime.getRuntime().availableProcessors(); //using all available cores for downloading
+        }
+        else {
+            cores = Integer.parseInt(SettingFileInfo.getItems().downloadLimit);
+        }
+        executor = Executors.newFixedThreadPool(cores);//creating a pool of downloadLimitSize threads
 
         addDataSaverToCloseOperation(); // add saving operation to close button
 
@@ -157,7 +169,7 @@ public class MainFrame extends JFrame {
             }
 
             else if(name[i].equals("pause")){
-                button.addActionListener(e -> System.out.println("Pause Pressed"));
+                
             }
 
             else if(name[i].equals("remove")){
@@ -599,124 +611,26 @@ public class MainFrame extends JFrame {
         repaint();
 
         for(int i = 0 ; i < list.size() ; i++){
-            JPanel newDlPanel = new JPanel();
-            newDlPanel.setLayout(null);
-            newDlPanel.setName("" + i);
-            newDlPanel.setBackground(Color.decode("#ffe1ad"));
-           // newDlPanel.setSize(new Dimension(785,80));
-            //newDlPanel.setLocation(0,height);
-
-            JLabel icon = new JLabel(new ImageIcon("Files//dlIcon.png"));
-            icon.setSize(40,40);
-            icon.setLocation(10,20);
-            newDlPanel.add(icon);
-
-            JLabel fileName = new JLabel( list.get(i).getName() + "     " +list.get(i).getSize() + " KB" );
-            //JLabel fileLink = new JLabel(SettingFileInfo.getItems().downloads.get(i).link);
-            fileName.setLocation(70,14);
-            fileName.setSize(500,15);
-            fileName.setForeground(Color.GRAY);
-            newDlPanel.add(fileName);
-
-            JProgressBar progressBar = new JProgressBar(0,100);
-            progressBar.setSize(500,20);
-            progressBar.setLocation(70,34);
-            progressBar.setValue(0);
-            progressBar.setStringPainted(true);
-            newDlPanel.add(progressBar);
-
-            JButton open = new JButton(new ImageIcon("Files//open.png"));
-            open.setSize(15,15);
-            open.setBorder(BorderFactory.createEmptyBorder()); // remove the border of the button to make it looks like a flat image on panel
-            open.setBackground(Color.decode("#ffe1ad"));
-            open.setLocation(progressBar.getLocation().x + progressBar.getSize().width + 5,progressBar.getLocation().y);
             String savePath = SettingFileInfo.getItems().saveDir;
-            String fileDirecory = savePath + list.get(i).getName();
-            open.addActionListener(e -> {
-                File file = new File(fileDirecory);
-                Desktop desktop = Desktop.getDesktop();
-                if(file.exists()) {
-                    try {
-                        desktop.open(file);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            });
-            newDlPanel.add(open);
-            newDlPanel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if(selectedDownload != null) {
-                        selectedDownload.setBackground(Color.decode("#ffe1ad"));
-                    }
-                    selectedDownload = newDlPanel;
-                    newDlPanel.setBackground(Color.decode("#8dacef"));
-                }
-            });
+            String fileLink = list.get(i).getLink();
 
-            if(listType.equals("queue")){
-                SpinnerModel MinModel = new SpinnerNumberModel(0,0,60,1);
-                JSpinner minuteSpinner = new JSpinner(MinModel);
-                minuteSpinner.setLocation(open.getLocation().x + 60,open.getLocation().y - 2);
-                minuteSpinner.setValue(list.get(i).getQueueStartMinute());
-                JLabel mLabel = new JLabel("Minute");
-                mLabel.setSize(50,20);
-                mLabel.setLocation(minuteSpinner.getLocation().x,minuteSpinner.getLocation().y  + 20);
-                minuteSpinner.setSize(40,20);
-                Download min = list.get(i);
-                ChangeListener listener = new ChangeListener() {
-                    public void stateChanged(ChangeEvent e) {
-                        min.setQueueStartMinute((int)minuteSpinner.getValue());
-                    }
-                };
-                minuteSpinner.addChangeListener(listener);
-
-                newDlPanel.add(mLabel);
-                newDlPanel.add(minuteSpinner);
-
-
-                SpinnerModel HourModel = new SpinnerNumberModel(0,0,12,1);
-                JSpinner hourSpinner = new JSpinner(HourModel);
-                hourSpinner.setLocation(open.getLocation().x + 20,open.getLocation().y - 2);
-                hourSpinner.setSize(40,20);
-                hourSpinner.setValue(list.get(i).getQueueStartHour());
-                JLabel hLabel = new JLabel("Hour");
-                hLabel.setLocation(hourSpinner.getLocation().x,hourSpinner.getLocation().y  + 20);
-                hLabel.setSize(50,20);
-                Download hour = list.get(i);
-                ChangeListener listener2 = new ChangeListener() {
-                    public void stateChanged(ChangeEvent e) {
-                       hour.setQueueStartHour((int)hourSpinner.getValue());
-                    }
-                };
-                hourSpinner.addChangeListener(listener2);
-                newDlPanel.add(hLabel);
-                newDlPanel.add(hourSpinner);
-            }
+            JPanel newDlPanel = makeUIforEachDownload(list.get(i),i,savePath);
             downloadMainPanel.add(newDlPanel);
 
             repaint();
-            String fileLink = list.get(i).getLink();
-            if(! list.get(i).getCompleted()) {
-                Download instance = list.get(i);
-                //new Thread(() -> downloadFile(instance, progressBar,fileLink , savePath)).start();
-                Download download = list.get(i);
-                JFrame frame = this;
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Downloader downloader = new Downloader();
-                        try {
-                            downloader.downloadFromNet(frame,download,progressBar,fileLink,savePath);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+
+
+            if( !list.get(i).getCompleted()){ // this if prevents from downloading a file that is downloaded completely before
+                if(!list.get(i).isInProgress()) { //this if prevents from recalling download process for download when frame refreshes
+                    list.get(i).setInProgress(true);
+                    JFrame frame = this;
+                    Runnable worker = new WorkerThread(frame, list.get(i), fileLink, savePath);
+                    allWorkers.add(worker);
+                    executor.execute(worker);
+                }
             }
             else {
-                progressBar.setValue(100);
+                list.get(i).getProgressBar().setValue(100);
                 revalidate();
                 repaint();
             }
@@ -727,6 +641,100 @@ public class MainFrame extends JFrame {
 
     }
 
+    public JPanel makeUIforEachDownload(Download download , int downloadNumber, String savePath){
+        JPanel newDlPanel = new JPanel();
+        newDlPanel.setLayout(null);
+        newDlPanel.setName("" + downloadNumber);
+        newDlPanel.setBackground(Color.decode("#ffe1ad"));
+        // newDlPanel.setSize(new Dimension(785,80));
+        //newDlPanel.setLocation(0,height);
+
+        JLabel icon = new JLabel(new ImageIcon("Files//dlIcon.png"));
+        icon.setSize(40,40);
+        icon.setLocation(10,20);
+        newDlPanel.add(icon);
+
+        JLabel fileName = new JLabel( download.getName() + "     " + download.getSize() + " KB" );
+        //JLabel fileLink = new JLabel(SettingFileInfo.getItems().downloads.get(i).link);
+        fileName.setLocation(70,14);
+        fileName.setSize(500,15);
+        fileName.setForeground(Color.GRAY);
+        newDlPanel.add(fileName);
+
+        JProgressBar progressBar = download.getProgressBar();
+        newDlPanel.add(progressBar);
+
+        JButton open = new JButton(new ImageIcon("Files//open.png"));
+        open.setSize(15,15);
+        open.setBorder(BorderFactory.createEmptyBorder()); // remove the border of the button to make it looks like a flat image on panel
+        open.setBackground(Color.decode("#ffe1ad"));
+        open.setLocation(progressBar.getLocation().x + progressBar.getSize().width + 5,progressBar.getLocation().y);
+
+        String fileDirecory = savePath + download.getName();
+        open.addActionListener(e -> {
+            File file = new File(fileDirecory);
+            Desktop desktop = Desktop.getDesktop();
+            if(file.exists()) {
+                try {
+                    desktop.open(file);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        newDlPanel.add(open);
+        newDlPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(selectedDownload != null) {
+                    selectedDownload.setBackground(Color.decode("#ffe1ad"));
+                }
+                selectedDownload = newDlPanel;
+                newDlPanel.setBackground(Color.decode("#8dacef"));
+            }
+        });
+
+        if(listType.equals("queue")){
+            SpinnerModel MinModel = new SpinnerNumberModel(0,0,60,1);
+            JSpinner minuteSpinner = new JSpinner(MinModel);
+            minuteSpinner.setLocation(open.getLocation().x + 60,open.getLocation().y - 2);
+            minuteSpinner.setValue(download.getQueueStartMinute());
+            JLabel mLabel = new JLabel("Minute");
+            mLabel.setSize(50,20);
+            mLabel.setLocation(minuteSpinner.getLocation().x,minuteSpinner.getLocation().y  + 20);
+            minuteSpinner.setSize(40,20);
+            Download min = download;
+            ChangeListener listener = new ChangeListener() {
+                public void stateChanged(ChangeEvent e) {
+                    min.setQueueStartMinute((int)minuteSpinner.getValue());
+                }
+            };
+            minuteSpinner.addChangeListener(listener);
+
+            newDlPanel.add(mLabel);
+            newDlPanel.add(minuteSpinner);
+
+
+            SpinnerModel HourModel = new SpinnerNumberModel(0,0,12,1);
+            JSpinner hourSpinner = new JSpinner(HourModel);
+            hourSpinner.setLocation(open.getLocation().x + 20,open.getLocation().y - 2);
+            hourSpinner.setSize(40,20);
+            hourSpinner.setValue(download.getQueueStartHour());
+            JLabel hLabel = new JLabel("Hour");
+            hLabel.setLocation(hourSpinner.getLocation().x,hourSpinner.getLocation().y  + 20);
+            hLabel.setSize(50,20);
+            Download hour = download;
+            ChangeListener listener2 = new ChangeListener() {
+                public void stateChanged(ChangeEvent e) {
+                    hour.setQueueStartHour((int)hourSpinner.getValue());
+                }
+            };
+            hourSpinner.addChangeListener(listener2);
+            newDlPanel.add(hLabel);
+            newDlPanel.add(hourSpinner);
+        }
+        return newDlPanel;
+    }
     /**
      * process of downloading a file fom system.
      * reading file from source and writing to destination
@@ -884,4 +892,27 @@ public class MainFrame extends JFrame {
         });
     }
 
+    private class WorkerThread implements Runnable{
+        JFrame frame;
+        Download download;
+        JProgressBar progressBar;
+        String fileLink;
+        String savePath;
+        public WorkerThread(JFrame frame, Download download , String link, String savePath){
+            this.frame = frame;
+            this.download = download;
+            this.progressBar = progressBar;
+            this.fileLink = link;
+            this.savePath = savePath;
+        }
+        @Override
+        public void run() {
+            Downloader downloader = new Downloader();
+            try {
+                downloader.downloadFromNet(frame,download,fileLink,savePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

@@ -16,13 +16,13 @@ import java.net.URL;
          * @param saveDir path of the directory to save the file
          * @throws IOException
          */
-        public static void downloadFromNet(JFrame frame,Download download, JProgressBar progressBar,String fileURL, String saveDir) throws IOException {
+        public static void downloadFromNet(JFrame frame,Download download,String fileURL, String saveDir) throws IOException {
             URL url = new URL(fileURL);
             try {
                 System.out.println("HTTP");
                 HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
                 int responseCode = httpConn.getResponseCode();
-
+                System.out.println(responseCode);
                 // always check HTTP response code first
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     String fileName = "";
@@ -64,12 +64,13 @@ import java.net.URL;
                     byte[] buffer = new byte[4096];
                     int totalRead = 0;
                     int process = 0; //  between 0-100
+
                     while ((bytesRead = inputStream.read(buffer)) != -1) {
                         //System.out.println("-"+bytesRead);
                         outputStream.write(buffer, 0, bytesRead);
                         totalRead += bytesRead;
                         process = (totalRead * 100) / contentLength;
-                        progressBar.setValue(process);
+                        download.getProgressBar().setValue(process);
                         frame.repaint();
                         frame.revalidate();
                     }

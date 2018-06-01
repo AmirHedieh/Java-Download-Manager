@@ -1,5 +1,6 @@
 package com.example;
 
+import javax.swing.*;
 import java.io.File;
 
 /**
@@ -15,19 +16,42 @@ public class Download {
     private String name;
     private long size;
     private String time;
+    private boolean inProgress = false;
     private boolean inQueue = false;
     private boolean completed = false;
     private int QueueStartMinute = 0 ;
     private int QueueStartHour = 0;
+    private JProgressBar progressBar;
 
     public Download(String link,String time){
         this.link = link;
-        //this.name = name;
+        makeProgressBar();
         this.time = time;
         //setSize();
     }
 
     //methods
+
+
+    public void setInProgress(boolean inProgress) {
+        this.inProgress = inProgress;
+    }
+
+    public boolean isInProgress() {
+        return inProgress;
+    }
+
+    public JProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    private void makeProgressBar(){
+        progressBar = new JProgressBar(0,100);
+        progressBar.setSize(500,20);
+        progressBar.setLocation(70,34);
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
+    }
 
     public String getName() {
         return name;
