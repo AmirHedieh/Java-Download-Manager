@@ -611,11 +611,10 @@ public class MainFrame extends JFrame {
             icon.setLocation(10,20);
             newDlPanel.add(icon);
 
-            File getSizeFile = new File(list.get(i).getLink());
-            JLabel fileName = new JLabel( list.get(i).getName() + "     " + getSizeFile.length() / 1000 + " KB" );
+            JLabel fileName = new JLabel( list.get(i).getName() + "     " +list.get(i).getSize() + " KB" );
             //JLabel fileLink = new JLabel(SettingFileInfo.getItems().downloads.get(i).link);
             fileName.setLocation(70,14);
-            fileName.setSize(300,15);
+            fileName.setSize(500,15);
             fileName.setForeground(Color.GRAY);
             newDlPanel.add(fileName);
 
@@ -631,9 +630,10 @@ public class MainFrame extends JFrame {
             open.setBorder(BorderFactory.createEmptyBorder()); // remove the border of the button to make it looks like a flat image on panel
             open.setBackground(Color.decode("#ffe1ad"));
             open.setLocation(progressBar.getLocation().x + progressBar.getSize().width + 5,progressBar.getLocation().y);
-            String savePath = SettingFileInfo.getItems().saveDir + list.get(i).getName();
+            String savePath = SettingFileInfo.getItems().saveDir;
+            String fileDirecory = savePath + list.get(i).getName();
             open.addActionListener(e -> {
-                File file = new File(savePath);
+                File file = new File(fileDirecory);
                 Desktop desktop = Desktop.getDesktop();
                 if(file.exists()) {
                     try {
@@ -700,7 +700,20 @@ public class MainFrame extends JFrame {
             String fileLink = list.get(i).getLink();
             if(! list.get(i).getCompleted()) {
                 Download instance = list.get(i);
-                new Thread(() -> downloadFile(instance, progressBar, fileLink, savePath)).start();
+                //new Thread(() -> downloadFile(instance, progressBar,fileLink , savePath)).start();
+                Download download = list.get(i);
+                JFrame frame = this;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Downloader downloader = new Downloader();
+                        try {
+                            downloader.downloadFromNet(frame,download,progressBar,fileLink,savePath);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
             else {
                 progressBar.setValue(100);

@@ -81,18 +81,23 @@ public class DataReader {
         for(int i = 0 ; i < lines.length ; i++){
             String[] splitString = lines[i].split(" >> ");
             if(panelType.equals("downloads")){
-                Download newDl = new Download(splitString[0],splitString[1],splitString[2]);
+                Download newDl = new Download(splitString[0],splitString[2]);
+                newDl.setName(splitString[1]);
                 newDl.setQueueStartMinute(Integer.parseInt(splitString[3]));
                 newDl.setQueueStartHour(Integer.parseInt(splitString[4]));
                 if(splitString[5].equals("inQueue")){
                     newDl.setInQueue(true);
                 }
+                if(splitString[6].equals("true")) {
+                    newDl.setCompleted(true);
+                }
+                newDl.setSize(Integer.parseInt(splitString[7]));
                 SettingFileInfo.getItems().addDownloadToList(newDl);
             }
             else if(panelType.equals("removed")){
-                Download newDl = new Download(splitString[0],splitString[1],splitString[2]);
-                newDl.setQueueStartMinute(Integer.parseInt(splitString[3]));
-                newDl.setQueueStartHour(Integer.parseInt(splitString[4]));
+                Download newDl = new Download(splitString[0],splitString[2]);
+                newDl.setName(splitString[1]);
+                newDl.setSize(Integer.parseInt(splitString[3]));
                 SettingFileInfo.getItems().addToRemovedList(newDl);
             }
             else if(panelType.equals("queue")){

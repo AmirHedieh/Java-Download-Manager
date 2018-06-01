@@ -20,11 +20,11 @@ public class Download {
     private int QueueStartMinute = 0 ;
     private int QueueStartHour = 0;
 
-    public Download(String link, String name,String time){
+    public Download(String link,String time){
         this.link = link;
-        this.name = name;
+        //this.name = name;
         this.time = time;
-        setSize();
+        //setSize();
     }
 
     //methods
@@ -41,11 +41,13 @@ public class Download {
         return size;
     }
 
-    private void setSize(){
-        File file = new File(link);
-        size = file.length() / 1000;
+    public void setSize(long size){
+        this.size = size;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getTime(){
         return time;
@@ -81,5 +83,9 @@ public class Download {
 
     public void setInQueue(boolean inQueue) {
         this.inQueue = inQueue;
+    }
+
+    public boolean isCompleted() {
+        return completed;
     }
 }

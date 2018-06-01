@@ -2,6 +2,10 @@ package com.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,21 +23,21 @@ public class NewDownloadPanel {
     //String fileName = new String();
     JButton ok = new JButton("Ok");
     JButton cancel = new JButton("Cancel");
-    JButton addFile = new JButton("...");
-    String dir,dir2;
+    //JButton addFile = new JButton("...");
+    String dir, dir2;
 
     //constructor
-    public NewDownloadPanel(){
+    public NewDownloadPanel() {
 
         link.setForeground(Color.GRAY);
         fileName.setForeground(Color.GRAY);
         saveDirecotyr.setForeground(Color.GRAY);
         frame.setTitle("Add New Download");
-        if(SettingFileInfo.getItems().language.equals("Persian")){
+        if (SettingFileInfo.getItems().language.equals("Persian")) {
             frame.setTitle("دانلود جدید");
         }
         frame.setModal(true);
-        frame.setSize(650,350);
+        frame.setSize(650, 350);
         frame.getContentPane().setBackground(Color.WHITE);
         frame.getContentPane().setBackground(Color.decode("#1f96c4")); // green color
         frame.setLayout(null);
@@ -43,7 +47,7 @@ public class NewDownloadPanel {
         putComponents();
         addCancelAction();
         addOkAction();
-        addActionToaddFile();
+//        addActionToaddFile();
         frame.setVisible(true);
     }
 
@@ -51,45 +55,45 @@ public class NewDownloadPanel {
      * making UI including link, name,saveDirectory
      */
     //methods
-    private void putComponents(){
+    private void putComponents() {
 
         JLabel label1 = new JLabel("Link :");
-        if(SettingFileInfo.getItems().language.equals("Persian")){
+        if (SettingFileInfo.getItems().language.equals("Persian")) {
             label1.setText(": لینک");
         }
         label1.setForeground(Color.BLACK);
-        label1.setSize(100,20);
-        label1.setLocation(20,50);
-        link.setSize(470,30);
-        link.setLocation(120,45);
-        addFile.setSize(20,29);
-        addFile.setLocation(590,45);
-        frame.getContentPane().add(addFile);
+        label1.setSize(100, 20);
+        label1.setLocation(20, 50);
+        link.setSize(470, 30);
+        link.setLocation(120, 45);
+//        addFile.setSize(20,29);
+//        addFile.setLocation(590,45);
+//        frame.getContentPane().add(addFile);
         frame.getContentPane().add(link);
         frame.getContentPane().add(label1);
 
 
         JLabel label2 = new JLabel("File Name :");
-        if(SettingFileInfo.getItems().language.equals("Persian")){
+        if (SettingFileInfo.getItems().language.equals("Persian")) {
             label2.setText(": اسم فایل");
         }
         label2.setForeground(Color.BLACK);
-        label2.setSize(100,20);
-        label2.setLocation(20,100);
-        fileName.setSize(470,30);
-        fileName.setLocation(120,95);
+        label2.setSize(100, 20);
+        label2.setLocation(20, 100);
+        fileName.setSize(470, 30);
+        fileName.setLocation(120, 95);
         frame.getContentPane().add(fileName);
         frame.getContentPane().add(label2);
 
         JLabel label3 = new JLabel("Save Directory");
-        if(SettingFileInfo.getItems().language.equals("Persian")){
+        if (SettingFileInfo.getItems().language.equals("Persian")) {
             label3.setText(": مکان ذخیره سازی");
         }
         label3.setForeground(Color.BLACK);
-        label3.setSize(100,20);
-        label3.setLocation(20,150);
-        saveDirecotyr.setSize(470,30);
-        saveDirecotyr.setLocation(120,145);
+        label3.setSize(100, 20);
+        label3.setLocation(20, 150);
+        saveDirecotyr.setSize(470, 30);
+        saveDirecotyr.setLocation(120, 145);
         saveDirecotyr.setText(" " + SettingFileInfo.getItems().saveDir);
         frame.getContentPane().add(saveDirecotyr);
         frame.getContentPane().add(label3);
@@ -98,10 +102,10 @@ public class NewDownloadPanel {
     /**
      * cancel button which ignore all works done before and closes the frame without saving any change
      */
-    private void addCancelAction(){
+    private void addCancelAction() {
         //cancel.setBackground(Color.green);
-        cancel.setSize(100,40);
-        cancel.setLocation(540,270);
+        cancel.setSize(100, 40);
+        cancel.setLocation(540, 270);
         cancel.addActionListener(e -> {
             SettingFileInfo.getItems().setCheckContinue(1);
             frame.setVisible(false);
@@ -115,39 +119,57 @@ public class NewDownloadPanel {
      * set add State field in SettingFileInfo Class to 1 which means new download is added
      * set fileInfo field in SettingFileInfo Class to String s which include file info like name- directory-...
      */
-    private void addOkAction(){
-       // ok.setBackground(Color.green);
-        ok.setSize(100,40);
-        ok.setLocation(430,270);
+    private void addOkAction() {
+        // ok.setBackground(Color.green);
+        ok.setSize(100, 40);
+        ok.setLocation(430, 270);
         ok.addActionListener(e -> {
-                SettingFileInfo.getItems().setAddState(1);
-                SettingFileInfo.getItems().addDownloadToList(new Download(link.getText(),fileName.getText(),setStartTime()));
-                SettingFileInfo.getItems().setCheckContinue(1);
-                frame.setVisible(false);
+            SettingFileInfo.getItems().setAddState(1);
+            Download download = new Download(link.getText(), StartTime());
+            try {
+                setInfo(download);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            SettingFileInfo.getItems().addDownloadToList(download);
+            SettingFileInfo.getItems().setCheckContinue(1);
+            frame.setVisible(false);
         });
         frame.getContentPane().add(ok);
     }
 
-    private String setStartTime(){
+    private String StartTime() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
         Date date = new Date();
         return formatter.format(date);
     }
 
-    private void addActionToaddFile(){
-        JFileChooser address = new JFileChooser();
-        addFile.addActionListener(e -> {
-            int j = address.showOpenDialog(frame);
-            if( j == JFileChooser.APPROVE_OPTION){
-                java.io.File file = address.getSelectedFile();
-                dir = file.getAbsolutePath();
-                file = address.getCurrentDirectory();
-                dir2 = file.getAbsolutePath();
-                String s = dir.substring(dir2.length() + 1);
-                fileName.setText(s);
-                link.setText(dir);
-            }
-        });
-    }
+    public void setInfo(Download download) throws IOException {
+        URL url = new URL(link.getText());
+        if (link.getText().contains("http")) {
+            HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+            int responseCode = httpConn.getResponseCode();
 
+            // always check HTTP response code first
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                String fileName = "";
+                String disposition = httpConn.getHeaderField("Content-Disposition");
+                int contentLength = httpConn.getContentLength(); //file size
+
+                if (disposition != null) {
+                    // extracts file name from header field
+                    int index = disposition.indexOf("filename=");
+                    if (index > 0) {
+                        fileName = disposition.substring(index + 9,
+                                disposition.length());
+                    }
+                } else {
+                    // extracts file name from URL
+                    fileName = link.getText().substring(link.getText().lastIndexOf("/") + 1, link.getText().length());
+                }
+                download.setSize(contentLength / 1000);
+                download.setName(fileName);
+            }
+        }
+    }
 }

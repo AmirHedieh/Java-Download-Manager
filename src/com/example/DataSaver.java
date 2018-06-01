@@ -42,18 +42,25 @@ public class DataSaver {
             downloadsData += SettingFileInfo.getItems().downloads.get(i).getLink() + " >> " +  SettingFileInfo.getItems().downloads.get(i).getName() + " >> " + SettingFileInfo.getItems().downloads.get(i).getTime() +
                     " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartMinute() + " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartHour();
             if(SettingFileInfo.getItems().downloads.get(i).getisInQueue()){
-                downloadsData += " >> " + "inQueue"  + "\r\n";
+                downloadsData += " >> " + "inQueue";
             }
             else {
-                downloadsData += " >> " + "notQueued" + "\r\n";
+                downloadsData += " >> " + "notQueued";
             }
+            if(SettingFileInfo.getItems().downloads.get(i).isCompleted()){
+                downloadsData += " >> " + "true" ;
+            }
+            else {
+                downloadsData += " >> " + "false" ;
+            }
+            downloadsData += " >> " + SettingFileInfo.getItems().downloads.get(i).getSize()+ "\r\n";
         }
     }
 
     private void makeRemovedDownloadsSaveString(){
         for(int i = 0 ; i < SettingFileInfo.getItems().removed.size() ; i++) {
             removedDownloadsData += SettingFileInfo.getItems().removed.get(i).getLink() + " >> " +  SettingFileInfo.getItems().removed.get(i).getName() + " >> " + SettingFileInfo.getItems().removed.get(i).getTime()
-            + " >> " + SettingFileInfo.getItems().removed.get(i).getQueueStartMinute() + " >> " + SettingFileInfo.getItems().removed.get(i).getQueueStartHour()+ "\r\n";
+           + " >> " + SettingFileInfo.getItems().removed.get(i).getSize() + "\r\n";
         }
     }
 
