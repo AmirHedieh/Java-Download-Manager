@@ -131,9 +131,31 @@ public class NewDownloadPanel {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            SettingFileInfo.getItems().addDownloadToList(download);
-            SettingFileInfo.getItems().setCheckContinue(1);
-            frame.setVisible(false);
+            boolean isRestricted = false;
+            for(int i = 0 ; i < SettingFileInfo.getItems().restrictedSitesList.size() ; i++){
+                if(download.getLink().toLowerCase().contains(SettingFileInfo.getItems().restrictedSitesList.get(i))){
+                    isRestricted = true;
+                }
+            }
+            if(!isRestricted) {
+                SettingFileInfo.getItems().addDownloadToList(download);
+                SettingFileInfo.getItems().setCheckContinue(1);
+            }
+            else {
+                JDialog warningFrame = new JDialog();
+                warningFrame.setSize(400,200);
+                warningFrame.setLocationRelativeTo(null);
+                warningFrame.setLayout(null);
+                warningFrame.getContentPane().setBackground(Color.orange);
+                warningFrame.setTitle("RESTRICTED!");
+                JLabel label = new JLabel("Url is Restricted.");
+                label.setSize(100,50);
+                label.setLocation(145,45);
+                warningFrame.add(label);
+                warningFrame.setModal(true);
+                warningFrame.setVisible(true);
+            }
+                frame.setVisible(false);
         });
         frame.getContentPane().add(ok);
     }
