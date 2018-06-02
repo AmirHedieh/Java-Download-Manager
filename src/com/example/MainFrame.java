@@ -354,7 +354,7 @@ public class MainFrame extends JFrame {
             }
         }
         for(int i = 0 ; i < items.size() ; i++ ){
-            if(items.get(i).getName().contains(searchedText) || items.get(i).getLink().contains(searchedText)){
+            if(items.get(i).getName().toLowerCase().contains(searchedText.toLowerCase()) || items.get(i).getLink().toLowerCase().contains(searchedText.toLowerCase())){
                 matchedSearches.add(items.get(i));
             }
         }
