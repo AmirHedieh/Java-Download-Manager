@@ -91,7 +91,9 @@ public class WorkerThread implements Runnable{
                 setStarted(true);
 
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    //System.out.println("-"+bytesRead);
+                    if(process % 20 == 0) {
+                        System.out.println(process + "%");
+                    }
                     outputStream.write(buffer, 0, bytesRead);
                     totalRead += bytesRead;
                     process = (totalRead * 100) / contentLength;
@@ -106,7 +108,6 @@ public class WorkerThread implements Runnable{
                         }
                     }
                 }
-
 
                 download.setCompleted(true);
                 download.setInProgress(false);

@@ -88,8 +88,6 @@ public class Arranger {
         if(sort == 2) {
             for (int i = 0; i < times.size(); i++) { // make a new arrayList with sorted elements by name
                 for (int j = 0; j < SettingFileInfo.getItems().downloads.size(); j++) {
-                    for (int k = 0; k < SettingFileInfo.getItems().downloads.size(); k++) {
-                    }
                     if (times.get(i).equals(SettingFileInfo.getItems().downloads.get(j).getTime())) {
                         sortedList.add(SettingFileInfo.getItems().downloads.get(j));
                         break;

@@ -629,6 +629,9 @@ public class MainFrame extends JFrame {
      * @param type
      */
     private void paintMainDlPanel(int type){
+//        for(int i = 0 ; i < allWorkers.size() ; i++){
+//            allWorkers.get(i).setPause(false);
+//        }
          ArrayList<Download> list = new ArrayList<>();
         if(type == 1){
              list = SettingFileInfo.getItems().downloads;
@@ -679,7 +682,11 @@ public class MainFrame extends JFrame {
                 revalidate();
                 repaint();
             }
-
+//            for(int j = 0 ; j < allWorkers.size() ;j++){
+//                allWorkers.get(j).setPause(true);
+//            }
+            revalidate();
+            repaint();
             SettingFileInfo.getItems().setAddState(0); // change the add state to primal state
             SettingFileInfo.getItems().checkContinue = 0;
         }
