@@ -21,7 +21,7 @@ public class Download {
     private boolean completed = false;
     private int QueueStartMinute = 0 ;
     private int QueueStartHour = 0;
-    private JProgressBar progressBar;
+    private JProgressBar progressBar = new JProgressBar(0,100);
 
     public Download(String link,String time){
         this.link = link;
@@ -46,7 +46,6 @@ public class Download {
     }
 
     private void makeProgressBar(){
-        progressBar = new JProgressBar(0,100);
         progressBar.setSize(500,20);
         progressBar.setLocation(70,34);
         progressBar.setValue(0);

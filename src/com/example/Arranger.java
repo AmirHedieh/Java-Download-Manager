@@ -22,8 +22,6 @@ public class Arranger {
         if(sort == 1) {
             for (int i = 0; i < names.size(); i++) { // make a new arrayList with sorted elements by name
                 for (int j = 0; j < SettingFileInfo.getItems().downloads.size(); j++) {
-                    for (int k = 0; k < SettingFileInfo.getItems().downloads.size(); k++) {
-                    }
                     if (names.get(i).equals(SettingFileInfo.getItems().downloads.get(j).getName())) {
                         sortedList.add(SettingFileInfo.getItems().downloads.get(j));
                         break;

@@ -15,6 +15,8 @@ public class WorkerThread implements Runnable{
     String savePath;
     String name;
     boolean pause;
+    boolean started = false;
+
     public WorkerThread(JFrame frame, Download download , String link, String savePath){
         this.frame = frame;
         this.download = download;
@@ -86,6 +88,8 @@ public class WorkerThread implements Runnable{
                 int totalRead = 0;
                 int process = 0; //  between 0-100
 
+                setStarted(true);
+
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
                     //System.out.println("-"+bytesRead);
                     outputStream.write(buffer, 0, bytesRead);
@@ -126,5 +130,13 @@ public class WorkerThread implements Runnable{
 
     public void setPause(boolean state){
         pause = state;
+    }
+
+    public boolean isStarted() {
+        return started;
+    }
+
+    public void setStarted(boolean started) {
+        this.started = started;
     }
 }

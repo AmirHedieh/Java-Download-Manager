@@ -22,6 +22,7 @@ public class MainFrame extends JFrame {
 
     private JPanel downloadMainPanel;
     private ExecutorService executor; // thread pool to manage downloads
+    int cores;
     private ArrayList<WorkerThread> allWorkers = new ArrayList<>();
     private TrayIcon trayIcon;
     private SystemTray tray;
@@ -31,7 +32,7 @@ public class MainFrame extends JFrame {
     //constructor
     public MainFrame(){
         DataReader dataReader = new DataReader(); //loads data from saves at the launch of program
-        int cores;
+
 
         if(SettingFileInfo.getItems().downloadLimit.equals("Unlimited")){
             cores = Runtime.getRuntime().availableProcessors(); //using all available cores for downloading
@@ -39,6 +40,7 @@ public class MainFrame extends JFrame {
         else {
             cores = Integer.parseInt(SettingFileInfo.getItems().downloadLimit);
         }
+        System.out.println("cores: " + cores);
         executor = Executors.newFixedThreadPool(cores);//creating a pool of downloadLimitSize threads
 
         addDataSaverToCloseOperation(); // add saving operation to close button
@@ -179,6 +181,9 @@ public class MainFrame extends JFrame {
                                 }
                             }
                             allWorkers.get(num).setPause(false);
+                            cores--;
+                            executor = Executors.newFixedThreadPool(cores);
+                            System.out.println("new executor cores: " +cores);
                         }
                     }
                 });
@@ -191,13 +196,21 @@ public class MainFrame extends JFrame {
                             if(selectedDownload != null) {
                                 String selectedName = selectedDownload.getName();
                                 int num = Integer.parseInt(selectedName) ;
-                                System.out.println(num);
+                                System.out.println("num- "+num);
                                 for (int i = 0 ; i < Integer.parseInt(selectedName) ; i++){
                                     if(!SettingFileInfo.getItems().downloads.get(i).isInProgress()){
                                         num--;
                                     }
                                 }
                                     allWorkers.get(num).setPause(true);
+                                //start: from this line, causes that when pausing one download another download starts
+                                cores++;
+                                executor = Executors.newFixedThreadPool(cores);
+                                System.out.println("new executor cores: " +cores);
+                                if((num + 1) < allWorkers.size() && allWorkers.get(num + 1) != null && !allWorkers.get(num+1).isStarted()){
+                                    executor.execute(allWorkers.get(num + 1));
+                                }
+                                //end
                             }
                     }
                });
@@ -657,6 +670,7 @@ public class MainFrame extends JFrame {
                     JFrame frame = this;
                     WorkerThread worker = new WorkerThread(frame, list.get(i), fileLink, savePath);
                     allWorkers.add(worker);
+//                    worker.run();
                     executor.execute(worker);
                 }
             }
