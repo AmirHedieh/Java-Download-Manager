@@ -173,7 +173,7 @@ public class MainFrame extends JFrame {
                             String selectedName = selectedDownload.getName();
                             int num = Integer.parseInt(selectedName) ;
                             System.out.println(num);
-                            for (int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++){
+                            for (int i = 0 ; i < Integer.parseInt(selectedName) ; i++){
                                 if(!SettingFileInfo.getItems().downloads.get(i).isInProgress()){
                                     num--;
                                 }
@@ -197,7 +197,6 @@ public class MainFrame extends JFrame {
                                         num--;
                                     }
                                 }
-                                System.out.println("num- "+num);
                                     allWorkers.get(num).setPause(true);
                             }
                     }
