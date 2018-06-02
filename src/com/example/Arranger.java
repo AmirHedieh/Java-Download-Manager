@@ -19,7 +19,7 @@ public class Arranger {
         }
         names.sort(String.CASE_INSENSITIVE_ORDER);
         ArrayList<Download> sortedList = new ArrayList<>();
-        if(sort == 1) {
+        if(sort == 2) {
             for (int i = 0; i < names.size(); i++) { // make a new arrayList with sorted elements by name
                 for (int j = 0; j < SettingFileInfo.getItems().downloads.size(); j++) {
                     if (names.get(i).equals(SettingFileInfo.getItems().downloads.get(j).getName())) {
@@ -29,7 +29,7 @@ public class Arranger {
                 }
             }
         }
-        if(sort == 2){
+        if(sort == 1){
             for (int i = names.size() - 1 ; i > -1; i--) { // make a new arrayList with sorted elements by name ( lower to greater)
                 for (int j = 0; j < SettingFileInfo.getItems().downloads.size(); j++) {
                     if (names.get(i).equals(SettingFileInfo.getItems().downloads.get(j).getName())) {
@@ -85,7 +85,7 @@ public class Arranger {
         }
         times.sort(String.CASE_INSENSITIVE_ORDER);
         ArrayList<Download> sortedList = new ArrayList<>();
-        if(sort == 1) {
+        if(sort == 2) {
             for (int i = 0; i < times.size(); i++) { // make a new arrayList with sorted elements by name
                 for (int j = 0; j < SettingFileInfo.getItems().downloads.size(); j++) {
                     for (int k = 0; k < SettingFileInfo.getItems().downloads.size(); k++) {
@@ -97,7 +97,7 @@ public class Arranger {
                 }
             }
         }
-        if(sort == 2){
+        if(sort == 1){
             for (int i = times.size() - 1 ; i > -1; i--) { // make a new arrayList with sorted elements by name ( lower to greater)
                 for (int j = 0; j < SettingFileInfo.getItems().downloads.size(); j++) {
                     if (times.get(i).equals(SettingFileInfo.getItems().downloads.get(j).getTime())) {
