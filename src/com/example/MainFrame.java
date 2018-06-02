@@ -214,10 +214,10 @@ public class MainFrame extends JFrame {
                             paintMainDlPanel(1);
                         }
                         else if(listType.equals("removed")){
-                            String selectedName = selectedDownload.getName();
-                            int num = Integer.parseInt(selectedName);
-                            SettingFileInfo.getItems().removeFromRemovedList(num);
-                            paintMainDlPanel(2);
+//                            String selectedName = selectedDownload.getName();
+//                            int num = Integer.parseInt(selectedName);
+//                            SettingFileInfo.getItems().removeFromRemovedList(num);
+//                            paintMainDlPanel(2);
                         }
                         else if(listType.equals("queue")){
                             String selectedName = selectedDownload.getName();
@@ -429,7 +429,7 @@ public class MainFrame extends JFrame {
             else  if(buttonName[i].equals("Removed                         ")|| buttonName[i].equals("                      حذف شده ها")){
                 button.addActionListener(e -> {
                    // System.out.println("removed");
-                    paintMainDlPanel(2);
+//                    paintMainDlPanel(2);
                 });
             }
             else  if(buttonName[i].equals("Queue                              ")|| buttonName[i].equals("                      صف")){
