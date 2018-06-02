@@ -7,8 +7,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.concurrent.*;
 
 import static java.lang.System.exit;
 
@@ -165,36 +166,41 @@ public class MainFrame extends JFrame {
             }
 
             else if(name[i].equals("play")){
-                button.addActionListener(e -> System.out.println("Play Pressed"));
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if(selectedDownload != null) {
+                            String selectedName = selectedDownload.getName();
+                            int num = Integer.parseInt(selectedName) ;
+                            System.out.println(num);
+                            for (int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++){
+                                if(!SettingFileInfo.getItems().downloads.get(i).isInProgress()){
+                                    num--;
+                                }
+                            }
+                            allWorkers.get(num).setPause(false);
+                        }
+                    }
+                });
             }
 
             else if(name[i].equals("pause")){
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        try {
                             if(selectedDownload != null) {
                                 String selectedName = selectedDownload.getName();
                                 int num = Integer.parseInt(selectedName) ;
-                                int sub = 0;
                                 System.out.println(num);
                                 for (int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++){
                                     if(!SettingFileInfo.getItems().downloads.get(i).isInProgress()){
-                                        sub++;
+                                        num--;
                                     }
                                 }
-                                System.out.println(sub);
-                                num -= sub;
-                                synchronized (allWorkers.get(num)) {
-                                    allWorkers.get(num).wait();
-                                }
+                                    allWorkers.get(num).setPause(true);
                             }
-                        } catch (InterruptedException e1) {
-                            e1.printStackTrace();
-                        }
-
                     }
-                });
+               });
             }
 
             else if(name[i].equals("remove")){
@@ -649,9 +655,7 @@ public class MainFrame extends JFrame {
                 if(!list.get(i).isInProgress()) { //this if prevents from recalling download process for download when frame refreshes
                     list.get(i).setInProgress(true);
                     JFrame frame = this;
-                    String s;
                     WorkerThread worker = new WorkerThread(frame, list.get(i), fileLink, savePath);
-                    worker.setName("" + i);
                     allWorkers.add(worker);
                     executor.execute(worker);
                 }
@@ -917,35 +921,5 @@ public class MainFrame extends JFrame {
                 System.exit(0);
             }
         });
-    }
-
-    private class WorkerThread implements Runnable{
-        JFrame frame;
-        Download download;
-        String fileLink;
-        String savePath;
-        String name;
-        public WorkerThread(JFrame frame, Download download , String link, String savePath){
-            this.frame = frame;
-            this.download = download;
-            this.fileLink = link;
-            this.savePath = savePath;
-        }
-        @Override
-        public void run() {
-            Downloader downloader = new Downloader();
-            try {
-                downloader.downloadFromNet(frame,download,fileLink,savePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        public void setName(String s){
-            name = s;
-        }
-
-        public String getName() {
-            return name;
-        }
     }
 }
