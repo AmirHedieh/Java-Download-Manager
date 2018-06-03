@@ -189,6 +189,16 @@ public class NewDownloadPanel {
                     // extracts file name from URL
                     fileName = link.getText().substring(link.getText().lastIndexOf("/") + 1, link.getText().length());
                 }
+                int sameName = 0;
+                for(int i = 0 ; i  < SettingFileInfo.getItems().downloads.size() ; i++){
+                    System.out.println("i-"+i);
+                    if(SettingFileInfo.getItems().downloads.get(i).getName().contains(fileName)){
+                        System.out.println("entered if");
+                        sameName++;
+                    }
+                }
+                fileName = sameName + fileName;
+
                 download.setSize(contentLength / 1000);
                 download.setName(fileName);
             }

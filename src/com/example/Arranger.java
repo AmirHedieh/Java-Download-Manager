@@ -39,6 +39,9 @@ public class Arranger {
                 }
             }
         }
+        for(int i =0 ; i < sortedList.size() ; i++){
+            System.out.println(sortedList.get(i).getName());
+        }
         SettingFileInfo.getItems().downloads = sortedList;
     }
 
@@ -58,21 +61,29 @@ public class Arranger {
         if( sort == 2) {
             for (int i = 0; i < sizes.size(); i++) {
                 for (int j = 0; j < SettingFileInfo.getItems().downloads.size(); j++) {
-                    if (sizes.get(i) == SettingFileInfo.getItems().downloads.get(j).getSize()) {
+                    if (sizes.get(i) == SettingFileInfo.getItems().downloads.get(j).getSize() && !SettingFileInfo.getItems().downloads.get(j).isSorted()) {
+                        SettingFileInfo.getItems().downloads.get(j).setSorted(true);
                         sortedList.add(SettingFileInfo.getItems().downloads.get(j));
                         break;
                     }
                 }
             }
+            for(int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++){
+                SettingFileInfo.getItems().downloads.get(i).setSorted(false);
+            }
         }
         else if( sort == 1){
             for (int i = sizes.size() - 1; i > -1; i--) {
                 for (int j = 0; j < SettingFileInfo.getItems().downloads.size(); j++) {
-                    if (sizes.get(i) == SettingFileInfo.getItems().downloads.get(j).getSize()) {
+                    if (sizes.get(i) == SettingFileInfo.getItems().downloads.get(j).getSize() && !SettingFileInfo.getItems().downloads.get(j).isSorted()) {
+                        SettingFileInfo.getItems().downloads.get(j).setSorted(true);
                         sortedList.add(SettingFileInfo.getItems().downloads.get(j));
                         break;
                     }
                 }
+            }
+            for(int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++){
+                SettingFileInfo.getItems().downloads.get(i).setSorted(false);
             }
         }
         SettingFileInfo.getItems().downloads = sortedList;

@@ -65,17 +65,15 @@ public class WorkerThread implements Runnable{
                     fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
                 }
 
-                download.setSize(contentLength / 1000); // set file size in download object
-                download.setName(fileName);
+//                download.setSize(contentLength / 1000); // set file size in download object
+//                download.setName(fileName);
 
-//                    System.out.println("Content-Disposition = " + disposition);
-//                    System.out.println("Content-Length = " + contentLength);
                 System.out.println("fileName = " + fileName);
 
                 InputStream inputStream = httpConn.getInputStream();
 
                 // opens input stream from the HTTP connection
-//                    System.out.println(saveDir);
+
                 String saveFilePath = saveDir + File.separator + fileName;
 
                 // opens an output stream to save into file
@@ -91,9 +89,9 @@ public class WorkerThread implements Runnable{
                 setStarted(true);
 
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    if(process % 20 == 0) {
-                        System.out.println(process + "%");
-                    }
+//                    if(process % 20 == 0) {
+//                        System.out.println(process + "%");
+//                    }
                     outputStream.write(buffer, 0, bytesRead);
                     totalRead += bytesRead;
                     process = (totalRead * 100) / contentLength;

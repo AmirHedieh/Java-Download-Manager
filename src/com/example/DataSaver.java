@@ -39,6 +39,7 @@ public class DataSaver {
 
     private void makeDownloadsSaveString(){
         for(int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++) {
+            System.out.println("written name" +SettingFileInfo.getItems().downloads.get(i).getName());
             downloadsData += SettingFileInfo.getItems().downloads.get(i).getLink() + " >> " +  SettingFileInfo.getItems().downloads.get(i).getName() + " >> " + SettingFileInfo.getItems().downloads.get(i).getTime() +
                     " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartMinute() + " >> " + SettingFileInfo.getItems().downloads.get(i).getQueueStartHour();
             if(SettingFileInfo.getItems().downloads.get(i).getisInQueue()){

@@ -19,6 +19,7 @@ public class Download {
     private boolean inProgress = false;
     private boolean inQueue = false;
     private boolean completed = false;
+    private boolean sorted = false;
     private int QueueStartMinute = 0 ;
     private int QueueStartHour = 0;
     private JProgressBar progressBar = new JProgressBar(0,100);
@@ -32,6 +33,14 @@ public class Download {
 
     //methods
 
+
+    public boolean isSorted() {
+        return sorted;
+    }
+
+    public void setSorted(boolean b){
+        sorted  = b;
+    }
 
     public void setInProgress(boolean inProgress) {
         this.inProgress = inProgress;
