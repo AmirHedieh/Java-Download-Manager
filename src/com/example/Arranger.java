@@ -22,21 +22,29 @@ public class Arranger {
         if(sort == 2) {
             for (int i = 0; i < names.size(); i++) { // make a new arrayList with sorted elements by name
                 for (int j = 0; j < SettingFileInfo.getItems().downloads.size(); j++) {
-                    if (names.get(i).equals(SettingFileInfo.getItems().downloads.get(j).getName())) {
+                    if (names.get(i).equals(SettingFileInfo.getItems().downloads.get(j).getName()) && !SettingFileInfo.getItems().downloads.get(j).isSorted()) {
+                        SettingFileInfo.getItems().downloads.get(j).setSorted(true);
                         sortedList.add(SettingFileInfo.getItems().downloads.get(j));
                         break;
                     }
                 }
             }
+            for(int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++){
+                SettingFileInfo.getItems().downloads.get(i).setSorted(false);
+            }
         }
         if(sort == 1){
             for (int i = names.size() - 1 ; i > -1; i--) { // make a new arrayList with sorted elements by name ( lower to greater)
                 for (int j = 0; j < SettingFileInfo.getItems().downloads.size(); j++) {
-                    if (names.get(i).equals(SettingFileInfo.getItems().downloads.get(j).getName())) {
+                    if (names.get(i).equals(SettingFileInfo.getItems().downloads.get(j).getName()) && !SettingFileInfo.getItems().downloads.get(j).isSorted()) {
+                        SettingFileInfo.getItems().downloads.get(j).setSorted(true);
                         sortedList.add(SettingFileInfo.getItems().downloads.get(j));
                         break;
                     }
                 }
+            }
+            for(int i = 0 ; i < SettingFileInfo.getItems().downloads.size() ; i++){
+                SettingFileInfo.getItems().downloads.get(i).setSorted(false);
             }
         }
         for(int i =0 ; i < sortedList.size() ; i++){
