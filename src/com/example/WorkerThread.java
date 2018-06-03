@@ -74,7 +74,7 @@ public class WorkerThread implements Runnable{
 
                 // opens input stream from the HTTP connection
 
-                String saveFilePath = saveDir + File.separator + fileName;
+                String saveFilePath = saveDir + File.separator + download.getName();
 
                 // opens an output stream to save into file
                 FileOutputStream outputStream = new FileOutputStream(saveFilePath);
