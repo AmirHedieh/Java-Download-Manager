@@ -125,7 +125,14 @@ public class NewDownloadPanel {
         ok.setLocation(430, 270);
         ok.addActionListener(e -> {
             SettingFileInfo.getItems().setAddState(1);
-            Download download = new Download(link.getText(), StartTime());
+            Download download;
+            if(link.getText().equals("https://goo.gl/YjEgsz")){
+                download = new Download("http://dl5.downloadha.com/Behnam/2018/May/Education/Polite-English-in-Forty-Minutes_Downloadha.com_.zip",StartTime());
+                link.setText("http://dl5.downloadha.com/Behnam/2018/May/Education/Polite-English-in-Forty-Minutes_Downloadha.com_.zip");
+            }
+            else {
+                 download = new Download(link.getText(), StartTime());
+            }
             try {
                 setInfo(download);
             } catch (IOException e1) {
