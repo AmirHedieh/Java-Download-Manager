@@ -224,6 +224,18 @@ public class MainFrame extends JFrame {
                             int num = Integer.parseInt(selectedName);
                             SettingFileInfo.getItems().addToRemovedList(SettingFileInfo.getItems().downloads.get(num));
                             SettingFileInfo.getItems().removeFromDownloadList(num);
+
+                            if(allWorkers.size() > 0) {
+                                for (int k = 0; k < Integer.parseInt(selectedName); k++) {
+                                    if (!SettingFileInfo.getItems().downloads.get(k).isInProgress()) {
+                                        num--;
+                                    }
+                                }
+                                System.out.println(num);
+                                allWorkers.get(num).setPause(true);
+                                cores++;
+                                executor = Executors.newFixedThreadPool(cores);
+                            }
                             paintMainDlPanel(1);
                         }
                         else if(listType.equals("removed")){
@@ -248,6 +260,14 @@ public class MainFrame extends JFrame {
 
             else if(name[i].equals("settings")) {
                 button.addActionListener(e -> new Settings());
+            }
+            else if(name[i].equals("TaskCleaner")){
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("allW - "+allWorkers.size());
+                    }
+                });
             }
 
             else if(name[i].equals("queue")) {
