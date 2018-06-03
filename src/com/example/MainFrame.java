@@ -259,9 +259,8 @@ public class MainFrame extends JFrame {
                         }
                         String selectedName = selectedDownload.getName();
                         int num = Integer.parseInt(selectedName);
-                        //SettingFileInfo.getItems().addToQueueList(SettingFileInfo.getItems().downloads.get(num));
                         SettingFileInfo.getItems().downloads.get(num).setInQueue(true);
-                        selectedDownload = null;
+                        //selectedDownload = null;
                     }
                 });
             }
